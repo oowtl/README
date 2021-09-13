@@ -70,16 +70,21 @@ domestic_book = driver.find_elements_by_xpath('/html/body/div[4]/div[1]/div[1]/d
 
 # //*[@id="big_banner"]/button
 #/html/body/div[4]/div[1]/div[1]/div[4]/button
-home_big_banner = driver.find_element_by_xpath('/html/body/div[4]/div[1]/div[1]/div[4]/button')
-# home_big_banner = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[4]/button')
+try:
+    home_big_banner = driver.find_element_by_xpath('/html/body/div[4]/div[1]/div[1]/div[4]/button')
+    # home_big_banner = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[4]/button')
+    # 홈페이지 큰 배너? 팝업창 제거
+    if home_big_banner:
+        print("------close big banner")
+        home_big_banner.click()
 
-if home_big_banner:
-    print("close big banner")
-    home_big_banner.click()
+except:
+    print('------banner pass')
+    pass
 
 # 국내도서로 이동
 domestic_book[0].click()
-print("국내도서 이동")
+print("------국내도서 이동")
 
 # domestic_novels = driver.find_elements_by_xpath('/html/body/div[2]/div[1]/div[2]/div/div[1]/div[1]/ul[1]/li[1]/ul/li/a')
 # domestic_novels = driver.find_elements_by_xpath('/html/body/div[2]/div[1]/div[2]/div/div[1]/div[1]/ul[1]/li[1]/ul/li[1]')
@@ -91,20 +96,89 @@ print("국내도서 이동")
 # t1 = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[1]/li[1]/a')
 # print(t1[0].text)
 
-domestic_menu = driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[1]/li[1]/a')
+# 소설 하나에 대한 xpath
+# domestic_menu = driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[1]/li[1]/a')
+
+# navigator 전체에 대한 css selector
+# domestic_all_book = driver.find_elements_by_css_selector('#main_snb > div.nav_category > ul > li')
+
+# 국내 도서 메뉴별 xpath 의 패턴
+# 소설             : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/a
+# 시/에세이        : //*[@id="main_snb"]/div[1]/ul[1]/li[2]/a
+# 경제/경영        : //*[@id="main_snb"]/div[1]/ul[1]/li[3]/a
+
+# 인문             : //*[@id="main_snb"]/div[1]/ul[2]/li[1]/a
+# 역사/문화        : //*[@id="main_snb"]/div[1]/ul[2]/li[2]/a
+
+# 끝(한국소개도서) : //*[@id="main_snb"]/div[1]/ul[7]/li/a
+
+# 패턴접근
+print('------pattern')
+
+# 대기
+driver.implicitly_wait(time_to_wait=5)
+
+book_menu_all = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul')
+print(len(book_menu_all))
+
+print('------mouse')
+# 각 장르 별로 하나 씩 해야 한다.
+for i in range(1, len(book_menu_all)):
+    # 중분류에 손을 올리고 소분류를 받아서 들어간다.
+
+    # ul > li(여기에 해당하는게 소설, 인문 등)
+    book_menu_middle = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li'.format(i))
+
+    # action ( 중분류 마우스 대기)
+    for j in range(1, len(book_menu_middle)+1):
+        actions_middle = ActionChains(driver)
+        actions_middle.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/a'.format(i, j)))
+        actions_middle.perform()
+
+        book_menu_small = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/ul/li'.format(i, j))
+
+        # 소분류(마우스 호버)
+        for k in range(1, len(book_menu_small)):
+            actions_small = ActionChains(driver)
+            actions_small.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/ul/li[{}]/a'.format(i,j,k)))
+            actions_small.click()
+            actions_small.perform()
+
+            driver.back()
+            
+        # 각 호버되는 것들의 패턴
+        # 소설 - 한국소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]/a
+        # 소설 - 영미소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[2]/a
+        # 소설 - 일본소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[3]/a
+
+        # 시/에세이 - 한국시 : //*[@id="main_snb"]/div[1]/ul[1]/li[2]/ul/li[1]/a
+        # 시/에세이 - 해외시 : //*[@id="main_snb"]/div[1]/ul[1]/li[2]/ul/li[2]/a
+        # 시/에세이 - 테마시 : //*[@id="main_snb"]/div[1]/ul[1]/li[2]/ul/li[3]/a
+
+        # 인문 - 인문학 일반 : //*[@id="main_snb"]/div[1]/ul[2]/li[1]/ul/li[1]/a
+        # 인문 - 심리학      : //*[@id="main_snb"]/div[1]/ul[2]/li[1]/ul/li[2]/a
+
+        
+
 
 # 필요하다... 이건 웹에서 보여야 하는 것 같다. html 으로는 아닌듯
-actions = ActionChains(driver)
-actions.move_to_element(domestic_menu)
-actions.perform()
-print("move mouse")
+# actions = ActionChains(driver)
+# actions.move_to_element(domestic_menu)
+# actions.perform()
+# print("move mouse")
 
+
+# hover 된 메뉴 파악
 # //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]
 # t2 = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]/a')
-t2 = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li')
-for i in t2:
-    print(f"{} 이동".format(i.text))
-    i.click()
-    break
 
-driver.quit()
+# t2 = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li')
+# for i in t2:
+#     # print("{} 이동".format(i.text))
+#     # i.click()
+#     # break
+
+#     print("{} : check".format(i.text))
+
+
+# driver.quit()

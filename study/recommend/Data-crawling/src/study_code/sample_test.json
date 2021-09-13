@@ -1,0 +1,16 @@
+{
+    "posts": [
+        {
+            "title": "i'm title",
+            "overview": "just do it!"
+        },
+        {
+            "title": "i'm second title",
+            "overview": "just do it! try again!"
+        },
+        {
+            "title": "my third title",
+            "overview": "just do it! we can"
+        }
+    ]
+}
