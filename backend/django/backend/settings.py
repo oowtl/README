@@ -85,12 +85,14 @@ WSGI_APPLICATION = "backend.wsgi.application"
 #     }
 # }
 
+# mysql 연동하기
+# USER, PASSWORD 부분은 수정해야합니다
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydatabase',
-        'USER': 'mydatabaseuser',
-        'PASSWORD': 'mypassword',
+        'NAME': 'ssafy_pjt',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         
