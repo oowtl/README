@@ -139,12 +139,24 @@ for i in range(1, len(book_menu_all)):
 
         # 소분류(마우스 호버)
         for k in range(1, len(book_menu_small)):
+
+            # 소분류 입장
             actions_small = ActionChains(driver)
             actions_small.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/ul/li[{}]/a'.format(i,j,k)))
             actions_small.click()
             actions_small.perform()
 
+            driver.implicitly_wait(time_to_wait=5)
+            
+            # 사이트 나오기
             driver.back()
+
+
+            # 다시 선택하기?
+            actions_small_back = ActionChains(driver)
+            actions_small_back.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/a'.format(i, j)))
+            actions_small_back.perform()
+
             
         # 각 호버되는 것들의 패턴
         # 소설 - 한국소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]/a

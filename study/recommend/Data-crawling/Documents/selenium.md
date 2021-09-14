@@ -325,4 +325,5 @@ from selenium.webdriver.support.ui import WebDriverWait
 - https://chancoding.tistory.com/136
 - https://greeksharifa.github.io/references/2020/10/30/python-selenium-usage/#install
 - https://pythondocs.net/selenium/%EC%85%80%EB%A0%88%EB%8B%88%EC%9B%80-%ED%81%AC%EB%A1%A4%EB%9F%AC-%EA%B8%B0%EB%B3%B8-%EC%82%AC%EC%9A%A9%EB%B2%95/
+- https://western-sky.tistory.com/55?category=847883
 
