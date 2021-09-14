@@ -1,6 +1,9 @@
 # 시간관련
 import time
 
+# json
+import json
+
 import selenium
 from selenium import webdriver
 
@@ -20,6 +23,87 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 # WebDriverWait : 대기지원, 요소가 나타나 때까지 대기를 하는 것
 from selenium.webdriver.support.ui import WebDriverWait
+
+# 함수
+
+# item 페이지에서 data를 수집하는 함수
+def search_item_page():
+    # 수집해야할 데이터
+    # title, author, publisher, genre, topic, price, story, img
+    title, author, publisher, genre, topic, price, story, img = ''
+
+    # title
+    # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/h1
+    # 달러구트 꿈 백화점 : //*[@id="container"]/div[2]/form/div[1]/h1
+    try:
+        book_item_page_title = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/h1')
+        print(book_item_page_title.text)
+        title = book_item_page_title.text
+    except:
+        pass
+
+    # author
+    # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a
+    # 달러구트 꿈 백화점 : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a
+    try:
+        book_item_page_author = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a')
+        print(book_item_page_author.text)
+        author = book_item_page_author.text
+    except:
+        pass
+
+    # publisher
+    # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a
+    # 달러구트 꿈 백화점 : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a
+    try:
+        book_item_page_publisher = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a')
+        print(book_item_page_publisher.text)
+        publisher = book_item_page_publisher.text
+    except:
+        pass
+
+    # genre
+    # 작별하지 않는다 - 1   : //*[@id="container"]/div[5]/div[1]/div[3]/ul/li/a[1]
+    # 작별하지 않는다 - 2   : //*[@id="container"]/div[5]/div[1]/div[3]/ul/li/a[2]
+    # 작별하지 않는다 - 3   : //*[@id="container"]/div[5]/div[1]/div[3]/ul/li/a[3]
+    # 달러구트 꿈 백화점 1-1: //*[@id="container"]/div[5]/div[1]/div[3]/ul/li[1]/a[1]
+    # 달러구트 꿈 백화점 1-2: //*[@id="container"]/div[5]/div[1]/div[3]/ul/li[1]/a[2]
+    # 달러구트 꿈 백화점 1-3: //*[@id="container"]/div[5]/div[1]/div[3]/ul/li[1]/a[3]
+    # 달러구트 꿈 백화점 2-1: //*[@id="container"]/div[5]/div[1]/div[3]/ul/li[2]/a[1]
+    # 달러구트 꿈 백화점 2-2: //*[@id="container"]/div[5]/div[1]/div[3]/ul/li[2]/a[2]
+    # 달러구트 꿈 백화점 2-3: //*[@id="container"]/div[5]/div[1]/div[3]/ul/li[2]/a[3]
+    
+    try:
+        # 장르가 몇개인지 확인
+        book_item_page_genre = driver.find_elements_by_xpath('//*[@id="container"]/div[5]/div[1]/div[3]/ul/li')
+        # 중복 없애기
+        book_genre = set()
+
+        for i in range(0, (len(book_item_page_genre))):
+            # > 로 나눠주기
+            genres = book_item_page_genre[i].text.split('>')
+
+            for j in range(0, len(genres)):
+                # 공백 제거해서 넣어주기
+                book_genre.add(genres[j].strip())
+        # 결과!
+        print(book_genre)
+
+        genre = book_genre
+                
+    except:
+        pass
+
+    # topic
+    
+
+    return 1
+
+
+
+
+
+
 
 URL = "http://www.kyobobook.co.kr/index.laf"
 
@@ -130,7 +214,6 @@ book_menu_all = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul')
 
 
 
-
 print('------mouse')
 # 각 장르 별로 하나 씩 해야 한다.
 for i in range(1, len(book_menu_all)):
@@ -164,7 +247,7 @@ for i in range(1, len(book_menu_all)):
             # 현재 xpath 는 상단에 들어가있는 것입니다.
             book_item_pagination = driver.find_elements_by_xpath('//*[@id="eventPaging"]/div/ul/li')
 
-            print(len(book_item_pagination))
+            # print(len(book_item_pagination))
 
             for l in range(1, (len(book_item_pagination)//2)+1):
 
@@ -177,11 +260,68 @@ for i in range(1, len(book_menu_all)):
                 # 대기시간
                 driver.implicitly_wait(time_to_wait=5)
 
+                # 실행
+
+                # 한 페이지에 나오는 책의 갯수를 구한다.
+                book_item_all = driver.find_elements_by_xpath('//*[@id="prd_list_type1"]/li')
+
+                # 20개 리스트를 하나씩 클릭한다.
+                for m in range(1, (len(book_item_all)//2)+1):
+                    # 북 리스트 - 책 한권 클릭
+                    action_to_item = ActionChains(driver)
+                    action_to_item.move_to_element(driver.find_element_by_xpath('//*[@id="prd_list_type1"]/li[{}]/div/div[1]/div[2]/div[1]/a'.format((m*2)-1)))
+                    action_to_item.click()
+                    action_to_item.perform()
+
+                    # 페이지 로드 대기(book item)
+                    driver.implicitly_wait(time_to_wait=5)
+
+                    # 데이터 수집
+                    search_item_page()
+
+                    # 현 상황 : book list로 돌아온 상황
+                    driver.back()
+                    # 페이지 로드 대기(book list)
+                    driver.implicitly_wait(time_to_wait=5)
+
+
+        
                 # 10이면 '>' 선택하고 다시 페이지네이션 돌려야 합니다.
                 if l == 10:
+                    # 하드코딩으로 극복
 
+                    # '>' 가 있으면 실행하고 없으면 break를 해서 넘어간다.
+                    try:
+                        go_to_next_page = driver.find_element_by_xpath('//*[@id="eventPaging"]/div/a[2]')
+                        action_to_pagination_go_plus = ActionChains(driver)
+                        action_to_pagination_go_plus.move_to_element(go_to_next_page)
+                        action_to_pagination_go_plus.click()
+                        action_to_pagination_go_plus.perform()
                     
-                    break
+                    # 에러가 나면 어떻게 할 것인가??
+                    except:
+                        break
+                    
+                    # 대기시간
+                    driver.implicitly_wait(time_to_wait=5)
+
+                    book_item_plus_pagination = driver.find_elements_by_xpath('//*[@id="eventPaging"]/div/ul/li')
+
+                    # print(len(book_item_plus_pagination))
+                    
+                    # 페이지네이션에 들어가기
+                    for z in range(1, (len(book_item_plus_pagination)//2+1)):
+
+                        # 페이지네이션 선택
+                        action_to_pagination_in_plus = ActionChains(driver)
+                        action_to_pagination_in_plus.move_to_element(driver.find_element_by_xpath('//*[@id="eventPaging"]/div/ul/li[{}]'.format(z)))
+                        action_to_pagination_in_plus.click()
+                        action_to_pagination_in_plus.perform()
+
+                        # 대기시간
+                        driver.implicitly_wait(time_to_wait=5)
+
+                        # 실행한다.
 
 
 
@@ -260,6 +400,8 @@ for i in range(1, len(book_menu_all)):
         # 3번  : //*[@id="eventPaging"]/div/ul/li[3]/a
         # 10번 : //*[@id="eventPaging"]/div/ul/li[10]/a
         # >    : //*[@id="eventPaging"]/div/a[2]
+        # 11번 : //*[@id="eventPaging"]/div/ul/li[1]/a (//*[@id="eventPaging"]/div/ul/li[1]/strong/a)
+        # 12번 : //*[@id="eventPaging"]/div/ul/li[2]/a
 
 
 
