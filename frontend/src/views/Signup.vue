@@ -8,45 +8,46 @@
                             <h4 slot="title" class="card-title">회원 가입</h4>
                             <p slot="description" class="description">Or Be Classical</p>
 
-                            <md-field slot="inputs" :class="{'md-invalid': !getSignupCheck.id.condition.flag && !getSignupCheck.id.duplicate.flag}">
+                            <md-field slot="inputs" :class="[!getSignupCheck.id.condition.flag && !getSignupCheck.id.duplicate.flag ? 'md-error' : 'md-valid']">
                                 <md-icon>face</md-icon>
                                 <label>ID</label>
-                                <md-input v-model="id"></md-input>
-                                <span class="md-error">안돼</span>
+                                <md-input v-model="id" type="text" @keyup="duplicateCheck('id')"></md-input>
                                 <span class="md-helper-text">{{getSignupCheck.id.condition.msg}}</span>
-                            </md-field>
-
-                            <md-field slot="inputs" :class="{'md-invalid': !getSignupCheck.nickname.condition.flag && !getSignupCheck.nickname.duplicate.flag}">
-                                <md-icon>supervisor_account</md-icon>
-                                <label>NickName</label>
-                                <md-input v-model="nickname"></md-input>
-                                <span class="md-helper-text">{{getSignupCheck.nickname.condition.msg}}</span>
-                                <span class="md-error">안돼</span>
-                            </md-field>
-
-                            <md-field :class="messageClass" slot="inputs">
-                                <md-icon>lock</md-icon>
-                                <label>Password</label>
-                                <md-input v-model="password" type="password" required></md-input>
-                                <span class="md-error">안돼</span>
-                                <span class="md-helper-text">{{getSignupCheck.password.condition.msg}}</span>
-                            </md-field>
-
-                            <md-field slot="inputs" :class="[!getSignupCheck.password.condition.flag ? 'md-error' : 'md-valid']">
-                                <label>Success Input</label>
-                                <md-input v-model="success" type="text"></md-input>
-                                <div v-if="!getSignupCheck.password.condition.flag">
-                                    <md-icon>clear</md-icon>
-                                </div>
-                                <div v-else>
+                                <div v-if="getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag">
                                     <md-icon>done</md-icon>
                                 </div>
+                                <div v-else>
+                                    <md-icon>clear</md-icon>
+                                </div>
                             </md-field>
 
-                            <md-field class="md-error">
-                                <label>Error Input</label>
-                                <md-input v-model="error" type="text"></md-input>
-                                <md-icon>{{icon.password}}</md-icon>
+
+                            <md-field slot="inputs" :class="[!getSignupCheck.nickname.condition.flag && !getSignupCheck.nickname.duplicate.flag ? 'md-error' : 'md-valid']">
+                                <md-icon>supervisor_account</md-icon>
+                                <label>NickName</label>
+                                <md-input v-model="nickname" type="text" @keyup="duplicateCheck('nickname')"></md-input>
+                                <span class="md-helper-text">{{getSignupCheck.nickname.condition.msg}}</span>
+                                <div v-if="getSignupCheck.nickname.condition.flag && getSignupCheck.nickname.duplicate.flag">
+                                    <md-icon>done</md-icon>
+                                </div>
+                                <div v-else>
+                                    <md-icon>clear</md-icon>
+                                </div>
+                            </md-field>
+                            
+
+                            <md-field slot="inputs" :class="[!getSignupCheck.password.condition.flag ? 'md-error' : 'md-valid']">
+                                <md-icon>lock</md-icon>
+                                <label>Password</label>
+                                <md-input v-model="password" type="text" @keyup="duplicateCheck('password')"></md-input>
+                                <span class="md-helper-text">{{getSignupCheck.password.condition.msg}}</span>
+                                <div v-if="getSignupCheck.password.condition.flag">
+                                    <md-icon>done</md-icon>
+                                </div>
+                                <div v-else>
+                                    <md-icon>clear</md-icon>
+                                </div>
+                                <span>{{getSignupCheck}}</span>
                             </md-field>
                             
                             <md-button slot="footer" class="md-simple md-success md-lg" @click="duplicateCheck('password')">
