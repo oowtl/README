@@ -24,27 +24,31 @@ from selenium.webdriver.support.ui import Select
 # WebDriverWait : 대기지원, 요소가 나타나 때까지 대기를 하는 것
 from selenium.webdriver.support.ui import WebDriverWait
 
-# 함수
+# 도서정보 id
+book_id = 1
 
+# 함수
 # item 페이지에서 data를 수집하는 함수
 def search_item_page():
+    global book_id
+
     # 수집해야할 데이터
     # title, author, publisher, genre, topic, price, story, img
-    title, author, publisher, genre, topic, price, story, img = '', '', '', '', '', '', '', ''
 
+    # 도서정보를 담아둘 곳
     detail = {}
-
 
     # title
     # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/h1
     # 달러구트 꿈 백화점 : //*[@id="container"]/div[2]/form/div[1]/h1
     try:
         book_item_page_title = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/h1')
-        print(book_item_page_title.text)
-        title = book_item_page_title.text
+        # print(book_item_page_title.text)
+        # title = book_item_page_title.text
         detail['title'] = book_item_page_title.text
     except:
         # detail['title'] = ''
+        print('book detail - title error')
         return 0
 
     # author
@@ -52,11 +56,12 @@ def search_item_page():
     # 달러구트 꿈 백화점 : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a
     try:
         book_item_page_author = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a')
-        print(book_item_page_author.text)
-        author = book_item_page_author.text
+        # print(book_item_page_author.text)
+        # author = book_item_page_author.text
         detail['author'] = book_item_page_author.text
     except:
         # detail['author'] = ''
+        print('book detail - author error')
         return 0
 
     # publisher
@@ -64,12 +69,13 @@ def search_item_page():
     # 달러구트 꿈 백화점 : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a
     try:
         book_item_page_publisher = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a')
-        print(book_item_page_publisher.text)
-        publisher = book_item_page_publisher.text
+        # print(book_item_page_publisher.text)
+        # publisher = book_item_page_publisher.text
         detail['publisher'] = book_item_page_publisher.text
     except:
         # detail['publisher'] = ''
         # pass
+        print('book detail - publisher error')
         return 0
 
     # genre
@@ -103,6 +109,7 @@ def search_item_page():
     except:
         # detail['genre'] = ''
         # pass
+        print('book detail - genre error')
         return 0
 
     # topic
@@ -130,6 +137,9 @@ def search_item_page():
         # 없다는 뜻
         # print('------keyword pass')
         # pass
+
+        print('book detail - keyword error')
+
         return 0
             
     # 달러구트 백화점.2 주제어 -1 : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[1]/span/em
@@ -155,6 +165,9 @@ def search_item_page():
         # 없다?
         # print('------topic pass')
         # pass
+        
+        print('book detail - topic error')
+
         return 0
 
     # topic이 없는 경우도 있어서..
@@ -172,14 +185,14 @@ def search_item_page():
         book_item_price = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[3]/div[1]/ul/li[1]/span[1]').text
 
         # '원' 없애주기
-        if book_item_price.find('원') >= 0:
-            book_item_price = book_item_price.replace('원', '')
-        
-        detail['price'] = book_item_price.text
+        book_item_price = book_item_price.replace('원', '')
+        detail['price'] = book_item_price
 
     except:
         # detail['price'] = ''
         # pass
+
+        print('book detail - price error')
         return 0
 
     # story
@@ -193,19 +206,33 @@ def search_item_page():
     except:
         # detail['story'] = ''
         # pass
+        print('book detail - story error')
         return 0
 
+    # img
+    # 작별하지 않는다       : //*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img
+    # 달러구트 꿈 백화점. 2 : //*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img
+    try:
+        book_item_img_tag = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img')
+        book_item_img = book_item_img_tag.get_attribute('src')
+        detail['img'] = book_item_img
+
+    except:
+        print('book detail - img error')
+        return 0
 
     # print(detail)
+
+    detail['id'] = book_id
+    book_id += 1
+    print("------ book detail ok")
 
     # 결과값==0 : 원하는 데이터가 아닙니다.
     # 결과값!=0 : 원하는 데이터   입니다.
     return detail
 
-
-
-
 URL = "http://www.kyobobook.co.kr/index.laf"
+file_path = "./book_data.json"
 
 # 에러메시지 해결 : 장치가 작동하지 않습니다.
 options = webdriver.ChromeOptions()
@@ -331,6 +358,17 @@ for i in range(1, len(book_menu_all)):
         # 소분류(마우스 호버)
         for k in range(1, len(book_menu_small)):
 
+            # json 불러오기
+            # 처음에는 data 가 없어서 load 할 것이 없다.
+            if i == 1:
+                print('------json write mode')
+                with open(file_path, 'w', encoding="UTF-8") as json_file:
+                    json_data = []
+            else:
+                print('------json read mode')
+                with open(file_path, 'r', encoding="UTF-8") as json_file:
+                    json_data = json.load(json_file)
+
             # 소분류 입장
             actions_small = ActionChains(driver)
             actions_small.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/ul/li[{}]/a'.format(i,j,k)))
@@ -374,8 +412,12 @@ for i in range(1, len(book_menu_all)):
                     # 페이지 로드 대기(book item)
                     driver.implicitly_wait(time_to_wait=5)
 
-                    # 데이터 수집
-                    search_item_page()
+                    # 데이터 수집, json 에 넣어줄 것들
+                    detail = search_item_page()
+                    if detail == 0:
+                        pass
+                    else:
+                        json_data.append(detail)
 
                     # 현 상황 : book list로 돌아온 상황
                     driver.back()
@@ -420,11 +462,33 @@ for i in range(1, len(book_menu_all)):
                         driver.implicitly_wait(time_to_wait=5)
 
                         # 실행
-                        # 데이터 수집
-                        search_item_page()
+                        # 데이터 수집, json 에 넣어줄 것들
+                        detail = search_item_page()
+                        if detail == 0:
+                            pass
+                        else:
+                            json_data.append(detail)
+            
+
+            # json 저장한다! (한 소분류가 끝나면 하는 것으로!)
+            with open(file_path, 'w')as outfile:
+                json.dump(json_data, outfile, ensure_ascii=False)
+
+            # 다시 호버를 할 수 있는 카테고리로 돌아가야 합니다.
+            # # 국내도서 카테고리로 돌아가기
+            action_to_category = ActionChains(driver)
+            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_category"]/a'))
+            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_menu01"]/div[1]'))
+            action_to_category.click()
+            action_to_category.perform()
+
+            # # 다시 마우스를 호버 해줘야 한다.
+            actions_small_back = ActionChains(driver)
+            actions_small_back.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/a'.format(i, j)))
+            actions_small_back.perform()
 
 
-
+            # 일단 여기까지!
             driver.quit()
             exit()
 
@@ -458,19 +522,11 @@ for i in range(1, len(book_menu_all)):
             # break
 
 
-            # # 국내도서 카테고리로 돌아가기
-            # action_to_category = ActionChains(driver)
-            # action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_category"]/a'))
-            # action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_menu01"]/div[1]'))
-            # action_to_category.click()
-            # action_to_category.perform()
+            
 
 
 
-            # # 다시 마우스를 호버 해줘야 한다.
-            # actions_small_back = ActionChains(driver)
-            # actions_small_back.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/a'.format(i, j)))
-            # actions_small_back.perform()
+            
 
             
         # 각 호버되는 것들의 패턴

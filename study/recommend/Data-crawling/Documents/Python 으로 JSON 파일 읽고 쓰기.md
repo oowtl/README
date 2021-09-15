@@ -95,6 +95,17 @@ with open(file_path, 'w') as outfile:
 
 
 
+### `ensure_ascii=False`
+
+> 이 옵션은 한글을 유니코드로 바꿔서 저장하는 것을 없애주는 것이다.
+
+```python
+with open(file_path, 'w') as outfile:
+    json.dump(json_data, outfile, indent=4, ensure_ascii=False)
+```
+
+- 이렇게 해주면 한글이 제대로 저장된다.
+
 
 
 
