@@ -30,7 +30,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 def search_item_page():
     # 수집해야할 데이터
     # title, author, publisher, genre, topic, price, story, img
-    title, author, publisher, genre, topic, price, story, img = ''
+    title, author, publisher, genre, topic, price, story, img = '', '', '', '', '', '', '', ''
+
+    detail = {}
+
 
     # title
     # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/h1
@@ -39,8 +42,10 @@ def search_item_page():
         book_item_page_title = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/h1')
         print(book_item_page_title.text)
         title = book_item_page_title.text
+        detail['title'] = book_item_page_title.text
     except:
-        pass
+        # detail['title'] = ''
+        return 0
 
     # author
     # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a
@@ -49,8 +54,10 @@ def search_item_page():
         book_item_page_author = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/div[2]/span[1]/a')
         print(book_item_page_author.text)
         author = book_item_page_author.text
+        detail['author'] = book_item_page_author.text
     except:
-        pass
+        # detail['author'] = ''
+        return 0
 
     # publisher
     # 작별하지 않는다    : //*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a
@@ -59,8 +66,11 @@ def search_item_page():
         book_item_page_publisher = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[1]/div[2]/span[3]/a')
         print(book_item_page_publisher.text)
         publisher = book_item_page_publisher.text
+        detail['publisher'] = book_item_page_publisher.text
     except:
-        pass
+        # detail['publisher'] = ''
+        # pass
+        return 0
 
     # genre
     # 작별하지 않는다 - 1   : //*[@id="container"]/div[5]/div[1]/div[3]/ul/li/a[1]
@@ -87,20 +97,110 @@ def search_item_page():
                 # 공백 제거해서 넣어주기
                 book_genre.add(genres[j].strip())
         # 결과!
-        print(book_genre)
-
         genre = book_genre
+        detail['genre'] = book_genre
                 
     except:
-        pass
+        # detail['genre'] = ''
+        # pass
+        return 0
 
     # topic
+    # 불편한 편의점 - 키워드 pick -1 : //*[@id="container"]/div[2]/form/div[2]/div[3]/div[2]/a[1]
+    # 불편한 편의점 - 키워드 pick -2 : //*[@id="container"]/div[2]/form/div[2]/div[3]/div[2]/a[2]
+    # 불편한 편의점 - 키워드 pick -3 : //*[@id="container"]/div[2]/form/div[2]/div[3]/div[2]/a[3]
     
+    # 키워드 pick 추출
 
-    return 1
+    topic = set()
+
+    try:
+        book_keyword_picks = driver.find_elements_by_xpath('//*[@id="container"]/div[2]/form/div[2]/div[3]/div[2]/a')
+        # print('find : len : {}'.format(len(book_keyword_picks))) # 0도 나오고 한다
+
+        if len(book_keyword_picks) == 0:
+            pass
+        # 키워드 pick 존재
+        else:
+            for i in range(1, len(book_keyword_picks)+1):
+                # 이 태그는 다 있는데, 내용이 없다.
+                pick = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[2]/div[3]/div[2]/a[{}]'.format(i)).text
+                topic.add(pick)
+    except:
+        # 없다는 뜻
+        # print('------keyword pass')
+        # pass
+        return 0
+            
+    # 달러구트 백화점.2 주제어 -1 : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[1]/span/em
+    # 달러구트 백화점.2 주제어 -2 : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[2]/span/em
+    # 달러구트 백화점.2 주제어 -3 : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[3]/span/em
+    # 달러구트 백화점.2 주제어 -4 : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[4]/span/em
+    # 달러구트 백화점.2 주제어 -4 : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[5]/span/em
+    
+    try:
+        book_item_topic = driver.find_elements_by_xpath('//*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a')
+        if len(book_item_topic) == 0:
+            pass
+        else:
+            for i in range(1, len(book_item_topic)+1):
+                item_topic = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[3]/div[2]/a[{}]/span'.format(i)).text
+
+                # 해시태그 삭제
+                if item_topic.find('#') >= 0:
+                    item_topic = item_topic.replace('#', '')
+                
+                topic.add(item_topic)
+    except:
+        # 없다?
+        # print('------topic pass')
+        # pass
+        return 0
+
+    # topic이 없는 경우도 있어서..
+    if len(topic)==0:
+        return 0
+    else:
+        detail['topic'] = topic
 
 
+    # price
+    # 작별하지 않는다       : //*[@id="container"]/div[2]/form/div[3]/div[1]/ul/li[1]/span[1]
+    # 달러구트 꿈 백화점. 2 : //*[@id="container"]/div[2]/form/div[3]/div[1]/ul/li[1]/span[1]
+    
+    try:
+        book_item_price = driver.find_element_by_xpath('//*[@id="container"]/div[2]/form/div[3]/div[1]/ul/li[1]/span[1]').text
 
+        # '원' 없애주기
+        if book_item_price.find('원') >= 0:
+            book_item_price = book_item_price.replace('원', '')
+        
+        detail['price'] = book_item_price.text
+
+    except:
+        # detail['price'] = ''
+        # pass
+        return 0
+
+    # story
+    # 작별하지 않는다      : //*[@id="container"]/div[5]/div[1]/div[3]/div[2]
+    # 작별하지 않는다.     : //*[@id="container"]/div[5]/div[1]/div[3]/div[3]
+    # 달러구트 꿈 백화점.2 : //*[@id="container"]/div[5]/div[1]/div[3]/div[3]
+
+    try:
+        book_item_story = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[3]/div[3]')
+        detail['story'] = book_item_story.text
+    except:
+        # detail['story'] = ''
+        # pass
+        return 0
+
+
+    # print(detail)
+
+    # 결과값==0 : 원하는 데이터가 아닙니다.
+    # 결과값!=0 : 원하는 데이터   입니다.
+    return detail
 
 
 
@@ -212,8 +312,6 @@ book_menu_all = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul')
 # 3번 : 클릭
 
 
-
-
 print('------mouse')
 # 각 장르 별로 하나 씩 해야 한다.
 for i in range(1, len(book_menu_all)):
@@ -321,7 +419,9 @@ for i in range(1, len(book_menu_all)):
                         # 대기시간
                         driver.implicitly_wait(time_to_wait=5)
 
-                        # 실행한다.
+                        # 실행
+                        # 데이터 수집
+                        search_item_page()
 
 
 
