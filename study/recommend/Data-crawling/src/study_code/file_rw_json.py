@@ -59,3 +59,6 @@ for i in range(3):
 
 with open('./test1.json', 'w', encoding="UTF-8") as test_1th:
     json.dump(data_1th, test_1th, indent=4 ,ensure_ascii=False)
+
+
+print(len('취미/실용/스포츠 > 퀴즈/퍼즐/스도쿠 > 네모네모로직'))
