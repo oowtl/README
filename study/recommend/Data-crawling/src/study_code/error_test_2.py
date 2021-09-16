@@ -89,14 +89,14 @@ for i in range(1, len(book_menu_all)):
             actions_small.perform()
 
             # 소분류로 입장을 하고 나서 대기
-            driver.implicitly_wait(time_to_wait=5)
+            driver.implicitly_wait(time_to_wait=2)
 
             # 페이지를 파악하자
             # 이 페이지는 페이지네이션이 2개가 들어갑니다.
             # 현재 xpath 는 상단에 들어가있는 것입니다.
             book_item_pagination = driver.find_elements_by_xpath('//*[@id="eventPaging"]/div/ul/li')
 
-            for l in range(1, 3):
+            for l in range(1, 2):
 
                 # 페이지네이션으로 들어 간다.
                 action_to_pagination = ActionChains(driver)
@@ -105,13 +105,13 @@ for i in range(1, len(book_menu_all)):
                 action_to_pagination.perform()
 
                 # 대기시간
-                driver.implicitly_wait(time_to_wait=5)
+                driver.implicitly_wait(time_to_wait=2)
 
                 # 한 페이지에 나오는 책의 갯수를 구한다.
                 book_item_all = driver.find_elements_by_xpath('//*[@id="prd_list_type1"]/li')
 
                 # 20개 리스트를 하나씩 클릭한다.
-                for m in range(16, 21):
+                for m in range(1, 2):
                     # 북 리스트 - 책 한권 클릭
                     action_to_item = ActionChains(driver)
                     action_to_item.move_to_element(driver.find_element_by_xpath('//*[@id="prd_list_type1"]/li[{}]/div/div[1]/div[2]/div[1]/a'.format((m*2)-1)))
@@ -119,7 +119,7 @@ for i in range(1, len(book_menu_all)):
                     action_to_item.perform()
 
                     # 페이지 로드 대기(book item)
-                    driver.implicitly_wait(time_to_wait=5)
+                    driver.implicitly_wait(time_to_wait=2)
 
                     # 잘 들어갔나 확인한다.
                     try:
@@ -135,13 +135,14 @@ for i in range(1, len(book_menu_all)):
                     # 현 상황 : book list로 돌아온 상황
                     driver.back()
                     # 페이지 로드 대기(book list)
-                    driver.implicitly_wait(time_to_wait=5)
+                    driver.implicitly_wait(time_to_wait=2)
 
             # 다시 호버를 할 수 있는 카테고리로 돌아가야 합니다.
             # 국내도서 카테고리로 돌아가기 : //*[@id="header"]/div[3]/ul[1]/li[1]/a
             # 메뉴 아이콘                  : //*[@id="gnb_category"]/a
             #                              : //*[@id="gnb_menu01"]/div[1]/a
             print('------back category')
+            time.sleep(2)
             action_to_category = ActionChains(driver)
             # action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="header"]/div[3]/ul[1]/li[1]/a'))
             action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_category"]/a'))
