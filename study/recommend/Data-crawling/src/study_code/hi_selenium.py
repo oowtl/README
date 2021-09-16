@@ -510,10 +510,10 @@ for i in range(1, len(book_menu_all)):
                         book_item_all = driver.find_elements_by_xpath('//*[@id="prd_list_type1"]/li')
 
                         # 20개 리스트를 하나씩 클릭한다.
-                        for m in range(1, (len(book_item_all)//2)+1):
+                        for t in range(1, (len(book_item_all)//2)+1):
                             # 북 리스트 - 책 한권 클릭
                             action_to_item = ActionChains(driver)
-                            action_to_item.move_to_element(driver.find_element_by_xpath('//*[@id="prd_list_type1"]/li[{}]/div/div[1]/div[2]/div[1]/a'.format((m*2)-1)))
+                            action_to_item.move_to_element(driver.find_element_by_xpath('//*[@id="prd_list_type1"]/li[{}]/div/div[1]/div[2]/div[1]/a'.format((t*2)-1)))
                             action_to_item.click()
                             action_to_item.perform()
 
@@ -538,7 +538,7 @@ for i in range(1, len(book_menu_all)):
                 json.dump(json_data, outfile, ensure_ascii=False)
 
             # 대기시간
-            driver.implicitly_wait(time_to_wait=5)
+            time.sleep(3)
 
             # 다시 호버를 할 수 있는 카테고리로 돌아가야 합니다.
             # 국내도서 카테고리로 돌아가기 : //*[@id="header"]/div[3]/ul[1]/li[1]/a
@@ -553,7 +553,8 @@ for i in range(1, len(book_menu_all)):
             action_to_category.perform()
 
             # 대기시간
-            driver.implicitly_wait(time_to_wait=5)
+            # driver.implicitly_wait(time_to_wait=5)
+            time.sleep(5) # 정량적으로 기다려줘야 알아먹는 경우도 있다.
 
             # # 다시 마우스를 호버 해줘야 한다.
             print('------back hover')
@@ -564,50 +565,9 @@ for i in range(1, len(book_menu_all)):
             # 대기시간
             driver.implicitly_wait(time_to_wait=5)
             
-
-
-            # 일단 여기까지!
-            # driver.quit()
-            # exit()
-
 driver.quit()
 exit()
 
-
-            # # 한 페이지에 나오는 책의 갯수
-            # book_item_all = driver.find_elements_by_xpath('//*[@id="prd_list_type1"]/li')
-            
-            # # print(len(book_item_all)) # 40 (20개) 1, 3, 5, 7, ...
-
-            # # 20개 리스트를 하나씩 클릭한다.
-            # for m in range(1, (len(book_item_all)//2)+1):
-            #     action_to_item = ActionChains(driver)
-            #     action_to_item.move_to_element(driver.find_element_by_xpath('//*[@id="prd_list_type1"]/li[{}]/div/div[1]/div[2]/div[1]/a'.format((m*2)-1)))
-            #     action_to_item.click()
-            #     action_to_item.perform()
-
-            #     # 페이지 로드 대기
-            #     driver.implicitly_wait(time_to_wait=10)
-
-            #     # 현 상황 : book item 페이지에 들어가있는 상황
-                
-
-            #     driver.back()
-            #     driver.implicitly_wait(time_to_wait=5)
-
-        
-            # # 종료
-            # driver.quit()
-            # break
-
-
-            
-
-
-
-            
-
-            
         # 각 호버되는 것들의 패턴
         # 소설 - 한국소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]/a
         # 소설 - 영미소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[2]/a
@@ -637,14 +597,3 @@ exit()
         # >    : //*[@id="eventPaging"]/div/a[2]
         # 11번 : //*[@id="eventPaging"]/div/ul/li[1]/a (//*[@id="eventPaging"]/div/ul/li[1]/strong/a)
         # 12번 : //*[@id="eventPaging"]/div/ul/li[2]/a
-
-
-
-# 필요하다... 이건 웹에서 보여야 하는 것 같다. html 으로는 아닌듯
-# actions = ActionChains(driver)
-# actions.move_to_element(domestic_menu)
-# actions.perform()
-# print("move mouse")
-
-
-# driver.quit()
