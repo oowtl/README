@@ -264,6 +264,7 @@ def search_item_page():
 
     # 결과값==0 : 원하는 데이터가 아닙니다.
     # 결과값!=0 : 원하는 데이터   입니다.
+    print(detail)
     return detail
 
 URL = "http://www.kyobobook.co.kr/index.laf"
@@ -390,6 +391,7 @@ for i in range(1, len(book_menu_all)):
 
     # action ( 중분류 마우스 대기)
     for j in range(1, len(book_menu_middle)+1):
+        # 소설, 시 등에 마우스 가져다 댄다.
         actions_middle = ActionChains(driver)
         actions_middle.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/a'.format(i, j)))
         actions_middle.perform()
@@ -411,6 +413,7 @@ for i in range(1, len(book_menu_all)):
                     json_data = json.load(json_file)
 
             # 소분류 입장
+            # 한국소설 등에 마우스를 가져다 댄다.
             actions_small = ActionChains(driver)
             actions_small.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/ul/li[{}]/a'.format(i,j,k)))
             actions_small.click()
@@ -538,10 +541,14 @@ for i in range(1, len(book_menu_all)):
             driver.implicitly_wait(time_to_wait=5)
 
             # 다시 호버를 할 수 있는 카테고리로 돌아가야 합니다.
-            # 국내도서 카테고리로 돌아가기 //*[@id="header"]/div[3]/ul[1]/li[1]/a
+            # 국내도서 카테고리로 돌아가기 : //*[@id="header"]/div[3]/ul[1]/li[1]/a
+            # 메뉴 아이콘                  : //*[@id="gnb_category"]/a
+            #                              : //*[@id="gnb_menu01"]/div[1]/a
             print('------back category')
             action_to_category = ActionChains(driver)
-            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="header"]/div[3]/ul[1]/li[1]/a'))
+            # action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="header"]/div[3]/ul[1]/li[1]/a'))
+            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_category"]/a'))
+            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_menu01"]/div[1]/a'))
             action_to_category.click()
             action_to_category.perform()
 
@@ -553,6 +560,10 @@ for i in range(1, len(book_menu_all)):
             actions_small_back = ActionChains(driver)
             actions_small_back.move_to_element(driver.find_element_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li[{}]/a'.format(i, j)))
             actions_small_back.perform()
+
+            # 대기시간
+            driver.implicitly_wait(time_to_wait=5)
+            
 
 
             # 일단 여기까지!
