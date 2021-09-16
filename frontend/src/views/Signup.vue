@@ -3,57 +3,26 @@
         <div class="section page-header header-filter" :style="headerStyle">
             <div class="container">
                 <div class="md-layout">
-                    <div class="md-layout-item md-size-33 md-small-size-66 md-xsmall-size-100 md-medium-size-40 mx-auto">
-                        <login-card header-color="green">
-                            <h4 slot="title" class="card-title">회원 가입</h4>
-                            <p slot="description" class="description">Or Be Classical</p>
+                    <div class="md-layout-item mx-auto">
+                        <div>
+                            <md-steppers :md-active-step.sync="active" md-linear md-alternative>
+                                <md-step id="first" md-label="회원정보" :md-done.sync="first">
+                                    <write-info/>
+                                    <md-button class="md-raised md-simple md-lg " :class="[this.getSignupCheck.password.flag && this.getSignupCheck.password.check ? 'md-success' : 'md-danger']" @click="clickSecond">Continue123123</md-button>
+                                </md-step>
+                                
 
-                            <md-field slot="inputs" :class="[!getSignupCheck.id.condition.flag && !getSignupCheck.id.duplicate.flag ? 'md-error' : 'md-valid']">
-                                <md-icon>face</md-icon>
-                                <label>ID</label>
-                                <md-input v-model="id" type="text" @keyup="duplicateCheck('id')"></md-input>
-                                <span class="md-helper-text">{{getSignupCheck.id.condition.msg}}</span>
-                                <div v-if="getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag">
-                                    <md-icon>done</md-icon>
-                                </div>
-                                <div v-else>
-                                    <md-icon>clear</md-icon>
-                                </div>
-                            </md-field>
+                                <md-step id="second" md-label="성향 검사" :md-done.sync="second" @click="clickSecond">
+                                    <propensity-test/>
+                                    <md-button class="md-raised md-primary" @click="setDone('second', 'third')">Continue</md-button>
+                                </md-step>
 
-
-                            <md-field slot="inputs" :class="[!getSignupCheck.nickname.condition.flag && !getSignupCheck.nickname.duplicate.flag ? 'md-error' : 'md-valid']">
-                                <md-icon>supervisor_account</md-icon>
-                                <label>NickName</label>
-                                <md-input v-model="nickname" type="text" @keyup="duplicateCheck('nickname')"></md-input>
-                                <span class="md-helper-text">{{getSignupCheck.nickname.condition.msg}}</span>
-                                <div v-if="getSignupCheck.nickname.condition.flag && getSignupCheck.nickname.duplicate.flag">
-                                    <md-icon>done</md-icon>
-                                </div>
-                                <div v-else>
-                                    <md-icon>clear</md-icon>
-                                </div>
-                            </md-field>
-                            
-
-                            <md-field slot="inputs" :class="[!getSignupCheck.password.condition.flag ? 'md-error' : 'md-valid']">
-                                <md-icon>lock</md-icon>
-                                <label>Password</label>
-                                <md-input v-model="password" type="text" @keyup="duplicateCheck('password')"></md-input>
-                                <span class="md-helper-text">{{getSignupCheck.password.condition.msg}}</span>
-                                <div v-if="getSignupCheck.password.condition.flag">
-                                    <md-icon>done</md-icon>
-                                </div>
-                                <div v-else>
-                                    <md-icon>clear</md-icon>
-                                </div>
-                                <span>{{getSignupCheck}}</span>
-                            </md-field>
-                            
-                            <md-button slot="footer" class="md-simple md-success md-lg" @click="duplicateCheck('password')">
-                                Get Started
-                            </md-button>
-                        </login-card>
+                                <md-step id="third" md-label="책 성향 검사" :md-done.sync="third">
+                                    
+                                    <md-button class="md-raised md-primary" @click="setDone('third')">CONTINUE123</md-button>
+                                </md-step>
+                            </md-steppers>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,24 +31,21 @@
 </template>
 
 <script>
-import { LoginCard } from "@/components";
+import WriteInfo from '../components/signup/WriteInfo.vue';
 import { mapGetters } from 'vuex';
+import PropensityTest from '../components/signup/PropensityTest.vue';
 
 export default {
     components: {
-        LoginCard
+        WriteInfo,
+        PropensityTest
     },
-    bodyClass: "login-page",
     data() {
         return {
-            id: "",
-            nickname: "",
-            password: "",
-            icon : {
-                id : "",
-                nickname : "",
-                password : ""
-            }
+            active: 'first',
+            first: false,
+            second: false,
+            third: false
         };
     },
     props: {
@@ -94,37 +60,31 @@ export default {
                 backgroundImage: `url(${this.header})`
             };
         },
-        messageClass () {
-            return {
-                'md-invalid' : !this.getSignupCheck.password.condition.flag
-            }
-        },
         ...mapGetters(['getSignupCheck'])
     },
     methods : {
-        conditionCheck : function(type){
-            if(type === 'id'){ // ID 조건
-                return this.id.length > 4 ? true : false
-            }else if(type === 'nickname'){ // 닉네임 조건
-                return this.nickname.length > 3 ? true : false
-            }else{ // Password 조건
-                return this.password.length > 5 ? true : false
+        setDone (id, index) {
+            this[id] = true
+
+            if (index) {
+                this.active = index
             }
         },
-        duplicateCheck : function(type){
-            var data = {
-                condition : this.conditionCheck(type),
-                val : type,
-            };
-            if(type === 'id'){
-                data["content"] = this.id;
-            }else {
-                data["content"] = this.nickname
-            }
-            this.$store.dispatch('signupCheck', data);
+        setError () {
+            this.secondStepError = 'This is an error!'
+        },
+        clickSecond() {
+            // if(this.getSignupCheck.password.flag && this.getSignupCheck.password.check){
+                this.setDone('first', 'second');
+            // }else{
+            //     alert("회원 정보가 완성되지 않았습니다.");
+            // }
         }
+        
     }
 };
 </script>
 
-<style lang="css"></style>
+<style lang="scss">
+
+</style>

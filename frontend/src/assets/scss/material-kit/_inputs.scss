@@ -157,7 +157,7 @@
     }
 
     &:before {
-        background-color: $brand-info !important;
+        background-color: $brand-primary !important;
     }
 
     &.md-focused label,
@@ -222,7 +222,7 @@
     &.md-focused > .md-icon,
     &.md-focused > .fas,
     &.md-focused > .fab {
-        color: $brand-info !important;
+        color: $brand-primary !important;
     }
 
     .success.md-icon,
