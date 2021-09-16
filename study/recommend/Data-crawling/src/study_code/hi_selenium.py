@@ -117,7 +117,7 @@ def search_item_page():
 
         # review 가 올라오지 못하도록 막기
         for i in range(0, (len(book_item_page_genre))):
-            if (book_item_page_genre[i].text in '|'): # review 이면 | 가 존재한다.
+            if ('|' in book_item_page_genre[i].text): # review 이면 | 가 존재한다.
                 # 다른 곳으로 바꿔준다.
                 book_item_page_genre = driver.find_elements_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/ul/li')
                 break
@@ -534,14 +534,19 @@ for i in range(1, len(book_menu_all)):
                 print('------save json')
                 json.dump(json_data, outfile, ensure_ascii=False)
 
+            # 대기시간
+            driver.implicitly_wait(time_to_wait=5)
+
             # 다시 호버를 할 수 있는 카테고리로 돌아가야 합니다.
-            # # 국내도서 카테고리로 돌아가기
+            # 국내도서 카테고리로 돌아가기 //*[@id="header"]/div[3]/ul[1]/li[1]/a
             print('------back category')
             action_to_category = ActionChains(driver)
-            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_category"]/a'))
-            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="gnb_menu01"]/div[1]'))
+            action_to_category.move_to_element(driver.find_element_by_xpath('//*[@id="header"]/div[3]/ul[1]/li[1]/a'))
             action_to_category.click()
             action_to_category.perform()
+
+            # 대기시간
+            driver.implicitly_wait(time_to_wait=5)
 
             # # 다시 마우스를 호버 해줘야 한다.
             print('------back hover')
