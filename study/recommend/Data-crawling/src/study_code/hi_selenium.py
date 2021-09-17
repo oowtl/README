@@ -243,20 +243,37 @@ def search_item_page():
     #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(5) > div:nth-child(8)
     # 여주인공의 오빠를 지 : //*[@id="container"]/div[5]/div[1]/div[2]/div[3]
     #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(8)
+    # 늑대                 : //*[@id="container"]/div[5]/div[1]/div[2]/div[2]
+    #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(6)
+    # 원미동 사람들        : //*[@id="container"]/div[5]/div[1]/div[2]/div[4]
+    #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(10)
+    # 멍에를 벗어나기 위한 : //*[@id="container"]/div[5]/div[1]/div[2]/div[3]
+    #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(8)
 
     try:
+        # 3 3
         book_item_story = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[3]/div[3]')
-        detail['story'] = book_item_story.text
+
+        if len(book_item_story.text) == 0:
+            book_item_story_try = story_crawl()
+            if book_item_story_try == 0:
+                return 0
+            else:
+                detail['story'] = book_item_story_try.replace("\n", "")
+        else:
+            detail['story'] = book_item_story.text.replace("\n", "")
     except:
         # detail['story'] = ''
         # pass
-        try:
-            book_item_story_retry = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[3]')
-            detail['story'] = book_item_story_retry.text
-        except:
+
+        book_item_story_try = story_crawl()
+
+        if book_item_story_try == 0:
             print('book detail - story error')
             return 0
 
+        detail['story'] = book_item_story_try.replace("\n", "")
+        
     # img
     # 작별하지 않는다       : //*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img
     # 달러구트 꿈 백화점. 2 : //*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img
@@ -296,10 +313,34 @@ def void_alert():
     except:
         return 0
     
-        
+def story_crawl():
+    # 2 3
+    try:
+        book_item_story_2_3 = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[3]')
+        # 아무것도 없으면 문제가 생긴다.
+        if len(book_item_story_2_3.text) == 0:
+            raise
+        return book_item_story_2_3.text
+    except:
+        # 2 4
+        try:
+            book_item_story_2_4 = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[4]')
+            if len(book_item_story_2_4.text) == 0:
+                raise
+            return book_item_story_2_4.text
+        except:
+            # 2 2
+            try:
+                book_item_story_2_2 = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[2]')
+                if len(book_item_story_2_2.text) == 0:
+                    raise
+                return book_item_story_2_2.text
+            except:
+                print('book detail - story error')
+                return 0
 
 URL = "http://www.kyobobook.co.kr/index.laf"
-file_path = "./book_data.json"
+file_path = "./book_data_2t.json"
 
 # 에러메시지 해결 : 장치가 작동하지 않습니다.
 options = webdriver.ChromeOptions()
@@ -340,29 +381,49 @@ driver.get(url=URL)
 # driver.find_elements_by_css_selector('.gnb_main > .item_1 > a') # css 선택자
 # driver.find_elements_by_tag_name('ul') # 태그 이름으로 접근
 
-# 클릭하기
-# //*[@id="header"]/div[3]/ul[1]/li[1]
-# /html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]
-# domestic_book = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]/a')
-domestic_book = driver.find_elements_by_xpath('/html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]')
-
 # //*[@id="big_banner"]/button
 #/html/body/div[4]/div[1]/div[1]/div[4]/button
 try:
-    home_big_banner = driver.find_element_by_xpath('/html/body/div[4]/div[1]/div[1]/div[4]/button')
+    home_big_banner = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[4]/button')
     # home_big_banner = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[4]/button')
+    # /html/body/div[4]/div[1]/div[1]/div[4]/button
+    
     # 홈페이지 큰 배너? 팝업창 제거
     if home_big_banner:
         print("------close big banner")
         home_big_banner.click()
 
 except:
-    print('------banner pass')
-    pass
+    # 태그가 바뀜
+    # /html/body/div[4]/div[1]/div[1]/div[4]/button
+    try: 
+        home_big_banner = driver.find_element_by_xpath('/html/body/div[4]/div[1]/div[1]/div[4]/button')
 
-# 국내도서로 이동
-domestic_book[0].click()
-print("------국내도서 이동")
+        # 홈페이지 큰 배너? 팝업창 제거
+        if home_big_banner:
+            print("------close big banner")
+            home_big_banner.click()
+    except:
+        print('------banner pass')
+
+# 클릭하기
+# //*[@id="header"]/div[3]/ul[1]/li[1]
+# /html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]
+# domestic_book = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]/a')
+# //*[@id="header"]/div[3]/ul[1]/li[1]/a
+# /html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]
+# /html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]/a
+domestic_book = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]')
+
+try: 
+    # 국내도서로 이동
+    domestic_book[0].click()
+    print("------국내도서 이동")
+except IndexError:
+    domestic_book = driver.find_elements_by_xpath('/html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]/a')
+    domestic_book[0].click()
+    print("------국내도서 이동")
+
 
 # domestic_novels = driver.find_elements_by_xpath('/html/body/div[2]/div[1]/div[2]/div/div[1]/div[1]/ul[1]/li[1]/ul/li/a')
 # domestic_novels = driver.find_elements_by_xpath('/html/body/div[2]/div[1]/div[2]/div/div[1]/div[1]/ul[1]/li[1]/ul/li[1]')
