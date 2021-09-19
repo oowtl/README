@@ -498,6 +498,9 @@ for i in range(1, len(book_menu_all)):
                 with open(file_path, 'r', encoding="UTF-8") as json_file:
                     json_data = json.load(json_file)
 
+            # 대기
+            time.sleep(3)
+
             # 소분류 입장
             # 한국소설 등에 마우스를 가져다 댄다.
             actions_small = ActionChains(driver)
@@ -662,10 +665,12 @@ for i in range(1, len(book_menu_all)):
             actions_small_back.perform()
 
             # 대기시간
-            driver.implicitly_wait(time_to_wait=2)
-            
-driver.quit()
-exit()
+            time.sleep(3)
+
+
+print('------done------')
+# driver.quit()
+# exit()
 
         # 각 호버되는 것들의 패턴
         # 소설 - 한국소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]/a
