@@ -32,6 +32,9 @@ book_id = 1
 def search_item_page():
     global book_id
 
+    #웹페이지 로드 기다리기
+    driver.implicitly_wait(time_to_wait=5)
+
     # 수집해야할 데이터
     # title, author, publisher, genre, topic, price, story, img
 
@@ -108,6 +111,10 @@ def search_item_page():
     # 바깥은 여름        1-1: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[1]
     # 바깥은 여름        1-2: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[2]
     # 바깥은 여름        1-2: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[3]
+    # 위기를 기회로 만든 1-1: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[1]
+    # 위기를 기회로 만든 1-2: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[2]
+    # 위기를 기회로 만든 1-3: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[3]
+    # 동대문 패션 그곳에 1-1: //*[@id="container"]/div[5]/div[1]/div[2]/ul/li/a[1]
     
     try:
         # 장르가 몇개인지 확인
@@ -129,6 +136,12 @@ def search_item_page():
             for j in range(0, len(genres)):
                 # 공백 제거해서 넣어주기
                 book_genre.add(genres[j].strip())
+
+        # genre 없으면?
+        if len(book_genre) == 0:
+            print('book deatil - genre error')
+            return 0
+        
         # 결과!
         detail['genre'] = list(book_genre)
                 
@@ -230,20 +243,37 @@ def search_item_page():
     #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(5) > div:nth-child(8)
     # 여주인공의 오빠를 지 : //*[@id="container"]/div[5]/div[1]/div[2]/div[3]
     #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(8)
+    # 늑대                 : //*[@id="container"]/div[5]/div[1]/div[2]/div[2]
+    #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(6)
+    # 원미동 사람들        : //*[@id="container"]/div[5]/div[1]/div[2]/div[4]
+    #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(10)
+    # 멍에를 벗어나기 위한 : //*[@id="container"]/div[5]/div[1]/div[2]/div[3]
+    #                      : #container > div:nth-child(7) > div.content_left > div:nth-child(3) > div:nth-child(8)
 
     try:
+        # 3 3
         book_item_story = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[3]/div[3]')
-        detail['story'] = book_item_story.text
+
+        if len(book_item_story.text) == 0:
+            book_item_story_try = story_crawl()
+            if book_item_story_try == 0:
+                return 0
+            else:
+                detail['story'] = book_item_story_try.replace("\n", "")
+        else:
+            detail['story'] = book_item_story.text.replace("\n", "")
     except:
         # detail['story'] = ''
         # pass
-        try:
-            book_item_story_retry = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[3]')
-            detail['story'] = book_item_story_retry.text
-        except:
+
+        book_item_story_try = story_crawl()
+
+        if book_item_story_try == 0:
             print('book detail - story error')
             return 0
 
+        detail['story'] = book_item_story_try.replace("\n", "")
+        
     # img
     # 작별하지 않는다       : //*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img
     # 달러구트 꿈 백화점. 2 : //*[@id="container"]/div[2]/form/div[2]/div[1]/div/a/img
@@ -267,8 +297,50 @@ def search_item_page():
     print(detail)
     return detail
 
+
+# 19금 도서 alert 창 회피하기
+def void_alert():  
+    try:
+        # alert 전환
+        alert = driver.switch_to_alert()
+
+        # alert 창 - 확인버튼
+        alert.accept() # 확인된 것은 확인창만 존재하는 alert 이니까 확인만 넣어놓고 돌려보자.
+        # # alert 창 - 끄기버튼
+        # alert.dismiss()
+        return 1
+    # 에러의 이유는 switch_to_alert 라는 것에만 한정지어서 생각함.
+    except:
+        return 0
+    
+def story_crawl():
+    # 2 3
+    try:
+        book_item_story_2_3 = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[3]')
+        # 아무것도 없으면 문제가 생긴다.
+        if len(book_item_story_2_3.text) == 0:
+            raise
+        return book_item_story_2_3.text
+    except:
+        # 2 4
+        try:
+            book_item_story_2_4 = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[4]')
+            if len(book_item_story_2_4.text) == 0:
+                raise
+            return book_item_story_2_4.text
+        except:
+            # 2 2
+            try:
+                book_item_story_2_2 = driver.find_element_by_xpath('//*[@id="container"]/div[5]/div[1]/div[2]/div[2]')
+                if len(book_item_story_2_2.text) == 0:
+                    raise
+                return book_item_story_2_2.text
+            except:
+                print('book detail - story error')
+                return 0
+
 URL = "http://www.kyobobook.co.kr/index.laf"
-file_path = "./book_data.json"
+file_path = "./book_data_2t.json"
 
 # 에러메시지 해결 : 장치가 작동하지 않습니다.
 options = webdriver.ChromeOptions()
@@ -309,29 +381,49 @@ driver.get(url=URL)
 # driver.find_elements_by_css_selector('.gnb_main > .item_1 > a') # css 선택자
 # driver.find_elements_by_tag_name('ul') # 태그 이름으로 접근
 
-# 클릭하기
-# //*[@id="header"]/div[3]/ul[1]/li[1]
-# /html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]
-# domestic_book = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]/a')
-domestic_book = driver.find_elements_by_xpath('/html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]')
-
 # //*[@id="big_banner"]/button
 #/html/body/div[4]/div[1]/div[1]/div[4]/button
 try:
-    home_big_banner = driver.find_element_by_xpath('/html/body/div[4]/div[1]/div[1]/div[4]/button')
+    home_big_banner = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[4]/button')
     # home_big_banner = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[4]/button')
+    # /html/body/div[4]/div[1]/div[1]/div[4]/button
+    
     # 홈페이지 큰 배너? 팝업창 제거
     if home_big_banner:
         print("------close big banner")
         home_big_banner.click()
 
 except:
-    print('------banner pass')
-    pass
+    # 태그가 바뀜
+    # /html/body/div[4]/div[1]/div[1]/div[4]/button
+    try: 
+        home_big_banner = driver.find_element_by_xpath('/html/body/div[4]/div[1]/div[1]/div[4]/button')
 
-# 국내도서로 이동
-domestic_book[0].click()
-print("------국내도서 이동")
+        # 홈페이지 큰 배너? 팝업창 제거
+        if home_big_banner:
+            print("------close big banner")
+            home_big_banner.click()
+    except:
+        print('------banner pass')
+
+# 클릭하기
+# //*[@id="header"]/div[3]/ul[1]/li[1]
+# /html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]
+# domestic_book = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]/a')
+# //*[@id="header"]/div[3]/ul[1]/li[1]/a
+# /html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]
+# /html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]/a
+domestic_book = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div[1]/div[3]/ul[1]/li[1]')
+
+try: 
+    # 국내도서로 이동
+    domestic_book[0].click()
+    print("------국내도서 이동")
+except IndexError:
+    domestic_book = driver.find_elements_by_xpath('/html/body/div[4]/div[1]/div[1]/div[3]/ul[1]/li[1]/a')
+    domestic_book[0].click()
+    print("------국내도서 이동")
+
 
 # domestic_novels = driver.find_elements_by_xpath('/html/body/div[2]/div[1]/div[2]/div/div[1]/div[1]/ul[1]/li[1]/ul/li/a')
 # domestic_novels = driver.find_elements_by_xpath('/html/body/div[2]/div[1]/div[2]/div/div[1]/div[1]/ul[1]/li[1]/ul/li[1]')
@@ -381,18 +473,6 @@ print('------mouse')
 for i in range(1, len(book_menu_all)):
     # 중분류에 손을 올리고 소분류를 받아서 들어간다.
 
-    if i ==3:
-        print('일단 끝')
-        driver.quit()
-        exit()
-
-    # 카테고리
-    # 소설      : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/a
-    # 시/에세이 : //*[@id="main_snb"]/div[1]/ul[1]/li[2]/a
-    # 경제/경영 : //*[@id="main_snb"]/div[1]/ul[1]/li[3]/a
-    # 인문      : //*[@id="main_snb"]/div[1]/ul[2]/li[1]/a
-    # 역사/문화 : //*[@id="main_snb"]/div[1]/ul[2]/li[2]/a
-
     # ul > li(여기에 해당하는게 소설, 인문 등)
     book_menu_middle = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li'.format(i))
 
@@ -410,7 +490,7 @@ for i in range(1, len(book_menu_all)):
 
             # json 불러오기
             # 처음에는 data 가 없어서 load 할 것이 없다.
-            if i == 1:
+            if k==1 and j==1 and i==1: # 완전 처음이면 하나 만들어서 넣어보자.
                 print('------json write mode')
                 with open(file_path, 'w', encoding="UTF-8") as json_file:
                     json_data = []
@@ -418,6 +498,9 @@ for i in range(1, len(book_menu_all)):
                 print('------json read mode')
                 with open(file_path, 'r', encoding="UTF-8") as json_file:
                     json_data = json.load(json_file)
+
+            # 대기
+            time.sleep(3)
 
             # 소분류 입장
             # 한국소설 등에 마우스를 가져다 댄다.
@@ -427,7 +510,7 @@ for i in range(1, len(book_menu_all)):
             actions_small.perform()
 
             # 소분류로 입장을 하고 나서 대기
-            driver.implicitly_wait(time_to_wait=5)
+            driver.implicitly_wait(time_to_wait=2)
 
             # 페이지를 파악하자
             # 이 페이지는 페이지네이션이 2개가 들어갑니다.
@@ -445,7 +528,7 @@ for i in range(1, len(book_menu_all)):
                 action_to_pagination.perform()
 
                 # 대기시간
-                driver.implicitly_wait(time_to_wait=5)
+                driver.implicitly_wait(time_to_wait=2)
 
                 # 실행
 
@@ -461,9 +544,15 @@ for i in range(1, len(book_menu_all)):
                     action_to_item.perform()
 
                     # 페이지 로드 대기(book item)
-                    driver.implicitly_wait(time_to_wait=5)
+                    driver.implicitly_wait(time_to_wait=1)
+
+                    # 19금 도서 alert 회피하기
+                    alert_status = void_alert() # 0 이면 정상도서, 1 이면 다음도서로 넘어가야한다.
+                    if alert_status == 1:
+                        continue
 
                     # 데이터 수집, json 에 넣어줄 것들
+                    # 자체적으로 기다리도록 하겠음
                     detail = search_item_page()
                     if detail == 0:
                         print('---detail fail')
@@ -473,7 +562,7 @@ for i in range(1, len(book_menu_all)):
                     # 현 상황 : book list로 돌아온 상황
                     driver.back()
                     # 페이지 로드 대기(book list)
-                    driver.implicitly_wait(time_to_wait=5)
+                    driver.implicitly_wait(time_to_wait=2)
 
                     
                 # 10이면 '>' 선택하고 다시 페이지네이션 돌려야 합니다.
@@ -493,7 +582,7 @@ for i in range(1, len(book_menu_all)):
                         break
                     
                     # 대기시간
-                    driver.implicitly_wait(time_to_wait=5)
+                    driver.implicitly_wait(time_to_wait=2)
 
                     book_item_plus_pagination = driver.find_elements_by_xpath('//*[@id="eventPaging"]/div/ul/li')
 
@@ -509,7 +598,7 @@ for i in range(1, len(book_menu_all)):
                         action_to_pagination_in_plus.perform()
 
                         # 대기시간
-                        driver.implicitly_wait(time_to_wait=5)
+                        driver.implicitly_wait(time_to_wait=2)
 
                         # 실행
 
@@ -525,9 +614,16 @@ for i in range(1, len(book_menu_all)):
                             action_to_item.perform()
 
                             # 페이지 로드 대기(book item)
-                            driver.implicitly_wait(time_to_wait=5)
+                            driver.implicitly_wait(time_to_wait=1)
+
+                            
+                            # 19금 도서 alert 회피하기
+                            alert_status = void_alert() # 0 이면 정상도서, 1 이면 다음도서로 넘어가야한다.
+                            if alert_status == 1:
+                                continue
 
                             # 데이터 수집, json 에 넣어줄 것들
+                            # 자체적으로 기다리도록 하겠음
                             detail = search_item_page()
                             if detail == 0:
                                 print('---detail fail')
@@ -537,7 +633,7 @@ for i in range(1, len(book_menu_all)):
                             # 현 상황 : book list로 돌아온 상황
                             driver.back()
                             # 페이지 로드 대기(book list)
-                            driver.implicitly_wait(time_to_wait=5)
+                            driver.implicitly_wait(time_to_wait=2)
 
             # json 저장한다! (한 소분류가 끝나면 하는 것으로!)
             with open(file_path, 'w', encoding="UTF-8")as outfile:
@@ -561,7 +657,7 @@ for i in range(1, len(book_menu_all)):
 
             # 대기시간
             # driver.implicitly_wait(time_to_wait=5)
-            time.sleep(5) # 정량적으로 기다려줘야 알아먹는 경우도 있다.
+            time.sleep(3) # 정량적으로 기다려줘야 알아먹는 경우도 있다.
 
             # # 다시 마우스를 호버 해줘야 한다.
             print('------back hover')
@@ -570,10 +666,12 @@ for i in range(1, len(book_menu_all)):
             actions_small_back.perform()
 
             # 대기시간
-            driver.implicitly_wait(time_to_wait=5)
-            
-driver.quit()
-exit()
+            time.sleep(3)
+
+
+print('------done------')
+# driver.quit()
+# exit()
 
         # 각 호버되는 것들의 패턴
         # 소설 - 한국소설    : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/ul/li[1]/a
