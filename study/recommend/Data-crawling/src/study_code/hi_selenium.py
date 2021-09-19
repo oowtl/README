@@ -365,6 +365,7 @@ print('------pattern')
 # 대기
 driver.implicitly_wait(time_to_wait=5)
 
+
 # 카테고리 부분이 몇개나 있는지
 book_menu_all = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul')
 
@@ -385,6 +386,12 @@ for i in range(1, len(book_menu_all)):
         driver.quit()
         exit()
 
+    # 카테고리
+    # 소설      : //*[@id="main_snb"]/div[1]/ul[1]/li[1]/a
+    # 시/에세이 : //*[@id="main_snb"]/div[1]/ul[1]/li[2]/a
+    # 경제/경영 : //*[@id="main_snb"]/div[1]/ul[1]/li[3]/a
+    # 인문      : //*[@id="main_snb"]/div[1]/ul[2]/li[1]/a
+    # 역사/문화 : //*[@id="main_snb"]/div[1]/ul[2]/li[2]/a
 
     # ul > li(여기에 해당하는게 소설, 인문 등)
     book_menu_middle = driver.find_elements_by_xpath('//*[@id="main_snb"]/div[1]/ul[{}]/li'.format(i))
