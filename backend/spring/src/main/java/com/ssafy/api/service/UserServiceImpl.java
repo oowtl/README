@@ -28,13 +28,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
-		System.out.println(userRegisterInfo.getId());
-		user.setUserId(userRegisterInfo.getId());
+		System.out.println(userRegisterInfo.getUserId());
+		user.setUserId(userRegisterInfo.getUserId());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
-		user.setName(userRegisterInfo.getName());
-		user.setDepartment(userRegisterInfo.getDepartment());
-		user.setPosition(userRegisterInfo.getPosition());
+		
+		user.setNickname(userRegisterInfo.getNickname());
+		user.setAge(userRegisterInfo.getAge());
+		user.setSex(userRegisterInfo.getSex());
 		
 		// jpaRepository의 save가 데이터가 새로 추가되면 insert를 실행
 		return userRepository.save(user);
@@ -49,13 +50,13 @@ public class UserServiceImpl implements UserService {
 		} else return null;
 	}
 
-	@Override
-	public void modifyUser(String userId, UserRegisterPostReq userRegisterInfo) {
-		if(userRepositorySupport.findUserByUserId(userId).isPresent()) {
-			System.out.println("아이디가 존재");
-			User user = userRepositorySupport.findUserByUserId(userId).get();
-			userRepositorySupport.updateUserByUserId(userId, userRegisterInfo);
-		}
-		
-	}
+//	@Override
+//	public void modifyUser(String userId, UserRegisterPostReq userRegisterInfo) {
+//		if(userRepositorySupport.findUserByUserId(userId).isPresent()) {
+//			System.out.println("아이디가 존재");
+//			User user = userRepositorySupport.findUserByUserId(userId).get();
+//			userRepositorySupport.updateUserByUserId(userId, userRegisterInfo);
+//		}
+//		
+//	}
 }

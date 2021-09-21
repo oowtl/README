@@ -26,10 +26,10 @@ public class UserRepositorySupport {
         return Optional.ofNullable(user);
     }
     
-    public void updateUserByUserId(String userId, UserRegisterPostReq userRegisterInfo) {
-    	jpaQueryFactory.update(qUser).where(qUser.userId.eq(userId))
-    			.set(qUser.name, userRegisterInfo.getName()).set(qUser.password, userRegisterInfo.getPassword())
-    			.set(qUser.department, userRegisterInfo.getDepartment()).set(qUser.position, userRegisterInfo.getPosition())
-    			.execute();
-    }
+//    public void updateUserByUserId(String userId, UserRegisterPostReq userRegisterInfo) {
+//    	jpaQueryFactory.update(qUser).where(qUser.userId.eq(userId))
+//    			.set(qUser.name, userRegisterInfo.getName()).set(qUser.password, userRegisterInfo.getPassword())
+//    			.set(qUser.department, userRegisterInfo.getDepartment()).set(qUser.position, userRegisterInfo.getPosition())
+//    			.execute();
+//    }
 }

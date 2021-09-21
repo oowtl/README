@@ -22,6 +22,4 @@ public class UserRegisterPostReq {
 	Integer age;
 	@ApiModelProperty(name="유저 sex", example="male")
 	String sex;
-	
-	
 }
