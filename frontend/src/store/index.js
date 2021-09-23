@@ -39,15 +39,13 @@ export default new Vuex.Store({
         }
       }
     },
-    propensity: {
-      I : false,
-      S : false,
-      T : false,
-      J : false,
-      E : false,
-      N : false,
-      F : false,
-      P : false
+    signUpForm: {
+      id: String,
+      nickname : String,
+      password: String,
+      propensity: [
+        "I", "S", "T", "J" 
+      ]
     }
   },
   getters: {
@@ -55,7 +53,7 @@ export default new Vuex.Store({
       return state.signupCheck;
     },
     getPropensity(state) {
-      return state.propensity;
+      return state.signUpForm.propensity;
     }
   },
   mutations: {
@@ -69,6 +67,9 @@ export default new Vuex.Store({
     },
     PASSWORDCHECK(state, flag) {
       state.signupCheck.password.check = flag;
+    },
+    SETPROPENSITY(state, propensity) {
+      state.signUpForm.propensity[propensity["index"]] = propensity["panel"];
     }
   },
   actions: {
@@ -96,6 +97,10 @@ export default new Vuex.Store({
     // 비밀번호 확인 검사
     passwordCheck({ commit }, flag) {
       commit("PASSWORDCHECK", flag);
+    },
+    // MBTI 입력
+    setPropensity({ commit }, propensity) {
+      commit("SETPROPENSITY", propensity)
     }
   }
 });

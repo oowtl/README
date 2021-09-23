@@ -6,15 +6,18 @@
                     <div class="md-layout-item mx-auto">
                         <div>
                             <md-steppers :md-active-step.sync="active" md-linear md-alternative>
-                                <md-step id="first" md-label="회원정보" :md-done.sync="first">
+                                <md-step id="first" md-label="회원정보" :md-done.sync="first" :md-error="firstStepError">
                                     <write-info/>
-                                    <md-button class="md-raised md-simple md-lg " :class="[this.getSignupCheck.password.flag && this.getSignupCheck.password.check ? 'md-success' : 'md-danger']" @click="clickSecond">Continue123123</md-button>
+                                    <md-button class="md-raised md-simple md-lg " 
+                                    :class="[this.getSignupCheck.password.flag && this.getSignupCheck.password.check ? 'md-success' : 'md-danger']" 
+                                    @click="firstContinue"
+                                    >Continue1</md-button>
                                 </md-step>
                                 
 
-                                <md-step id="second" md-label="성향 검사" :md-done.sync="second" @click="clickSecond">
+                                <md-step id="second" md-label="성향 검사" :md-done.sync="second" @click="firstContinue">
                                     <propensity-test/>
-                                    <md-button class="md-raised md-primary" @click="setDone('second', 'third')">Continue</md-button>
+                                    <md-button class="md-raised md-simple md-lg md-success" @click="setDone('second', 'third')">Continue12</md-button>
                                 </md-step>
 
                                 <md-step id="third" md-label="책 성향 검사" :md-done.sync="third">
@@ -45,7 +48,8 @@ export default {
             active: 'first',
             first: false,
             second: false,
-            third: false
+            third: false,
+            firstStepError: "회원 정보가 완료되지 않았습니다."
         };
     },
     props: {
@@ -60,7 +64,19 @@ export default {
                 backgroundImage: `url(${this.header})`
             };
         },
-        ...mapGetters(['getSignupCheck'])
+        ...mapGetters(['getSignupCheck', 'getPropensity']),
+        signupCheck : function(){
+            return this.getSignupCheck.password.flag && this.getSignupCheck.password.check
+        }
+    },
+    watch : {
+        signupCheck : function(){
+            if(this.getSignupCheck.password.flag && this.getSignupCheck.password.check){
+                this.firstStepError = null
+            }else{
+                this.setError()
+            }
+        }
     },
     methods : {
         setDone (id, index) {
@@ -71,16 +87,16 @@ export default {
             }
         },
         setError () {
-            this.secondStepError = 'This is an error!'
+            this.firstStepError = '회원 정보가 완료되지 않았습니다.'
         },
-        clickSecond() {
-            // if(this.getSignupCheck.password.flag && this.getSignupCheck.password.check){
+        firstContinue() {
+            if(this.getSignupCheck.password.flag && this.getSignupCheck.password.check){
+                this.firstStepError = null
                 this.setDone('first', 'second');
-            // }else{
-            //     alert("회원 정보가 완성되지 않았습니다.");
-            // }
+            }else{
+                this.setError()
+            }
         }
-        
     }
 };
 </script>
