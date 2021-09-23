@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
@@ -59,4 +60,14 @@ public class UserServiceImpl implements UserService {
 //		}
 //		
 //	}
+	
+	// 중복검사하기
+	@Override
+	public String getUserDuplicted(UserDuplicatedReq userDuplicatedInfo) {
+		// TODO Auto-generated method stub
+		
+		
+		
+		return "!";
+	}
 }

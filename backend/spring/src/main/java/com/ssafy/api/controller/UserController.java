@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.response.UserDuplicatedRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.UserService;
@@ -83,6 +85,41 @@ public class UserController {
 		User user = userService.getUserByUserId(userId);
 		
 		return ResponseEntity.status(200).body(UserRes.of(user));
+	}
+	
+	@GetMapping("/valDuplicated")
+	@ApiOperation(value = "아이디, 닉네임 중복체크", notes = "회원가입 시 중복체크 진행")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "검사 성공"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<UserDuplicatedRes> duplicateUser (
+			@RequestBody UserDuplicatedReq userduplicated) {
+		
+		// 1차 검사 val 이 잘 들어왔는가?
+		try {
+			
+			Exception er = new Exception();
+
+			// val 검사
+			String valType = userduplicated.getVal();
+			String valContent = userduplicated.getContent();
+			
+			// 내용 없음
+			if ("".equals(valType) || "".equals(valContent) ) {
+				throw er;
+			}
+			
+			String valRes = userService.getUserDuplicted(userduplicated);
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("NONONONON");
+			return ResponseEntity.status(200).body(UserDuplicatedRes.of("False"));
+		} 
+		
+		return ResponseEntity.status(200).body(UserDuplicatedRes.of("True"));
 	}
 	
 //	@GetMapping("/modify")
