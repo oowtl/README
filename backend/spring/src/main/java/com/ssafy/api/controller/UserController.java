@@ -110,16 +110,24 @@ public class UserController {
 				throw er;
 			}
 			
-			String valRes = userService.getUserDuplicted(userduplicated);
-			
+			switch (valType) {
+			case "id":
+				System.out.println("id");
+				String userIdValRes = userService.getUserIdDuplicated(userduplicated);
+				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userIdValRes));
+
+			case "nickname":
+				String userNickValRes = userService.getUserNickDuplicated(userduplicated);
+				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userNickValRes));
+				
+			default:
+				throw er;
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("NONONONON");
-			return ResponseEntity.status(200).body(UserDuplicatedRes.of("False"));
+			return ResponseEntity.status(200).body(UserDuplicatedRes.of("Error"));
 		} 
-		
-		return ResponseEntity.status(200).body(UserDuplicatedRes.of("True"));
 	}
 	
 //	@GetMapping("/modify")

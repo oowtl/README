@@ -11,5 +11,7 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 //	void modifyUser(String userId, UserRegisterPostReq userRegisterInfo);
-	String getUserDuplicted(UserDuplicatedReq userDuplicatedInfo);
+	
+	String getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	String getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo);
 }

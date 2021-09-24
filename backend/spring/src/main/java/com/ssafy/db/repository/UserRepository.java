@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	// Optional 타입으로 반환?? => UserRepositorySupport
 	// findBy, countBy
     Optional<User> findByUserId(String userId);
+    Optional<User> findByNickname(String nickname);
 }
