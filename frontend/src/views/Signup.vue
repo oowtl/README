@@ -21,7 +21,7 @@
                                 </md-step>
 
                                 <md-step id="third" md-label="책 성향 검사" :md-done.sync="third">
-                                    
+                                    <book-propensity-test/>
                                     <md-button class="md-raised md-primary" @click="setDone('third')">CONTINUE123</md-button>
                                 </md-step>
                             </md-steppers>
@@ -34,14 +34,16 @@
 </template>
 
 <script>
-import WriteInfo from '../components/signup/WriteInfo.vue';
 import { mapGetters } from 'vuex';
+import WriteInfo from '../components/signup/WriteInfo.vue';
 import PropensityTest from '../components/signup/PropensityTest.vue';
+import BookPropensityTest from '../components/signup/BookPropensityTest.vue';
 
 export default {
     components: {
         WriteInfo,
-        PropensityTest
+        PropensityTest,
+        BookPropensityTest
     },
     data() {
         return {
@@ -55,7 +57,7 @@ export default {
     props: {
         header: {
         type: String,
-        default: require("@/assets/img/profile_city.jpg")
+        default: require("@/assets/img/library.jpg")
         }
     },
     computed: {
@@ -64,7 +66,7 @@ export default {
                 backgroundImage: `url(${this.header})`
             };
         },
-        ...mapGetters(['getSignupCheck', 'getPropensity']),
+        ...mapGetters(['getSignupCheck']),
         signupCheck : function(){
             return this.getSignupCheck.password.flag && this.getSignupCheck.password.check
         }

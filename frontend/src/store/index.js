@@ -52,6 +52,9 @@ export default new Vuex.Store({
     getSignupCheck(state) {
       return state.signupCheck;
     },
+    getSignupForm(state) {
+      return state.signUpForm
+    },
     getPropensity(state) {
       return state.signUpForm.propensity;
     }
@@ -62,6 +65,7 @@ export default new Vuex.Store({
       if (result.type != 'password') {
         state.signupCheck[result.type].duplicate.flag = result.duplicate;
       }
+      state.signUpForm[result.type] = result.content
       state.signupCheck[result.type].condition.flag = result.condition;
       state.signupCheck[result.type].flag = result.duplicate && result.condition;
     },
@@ -78,9 +82,11 @@ export default new Vuex.Store({
       var result = {
         type: req.val,
         condition: req.condition,
-        duplicate: false
+        duplicate: false,
+        content : req.content
       };
       if (req.val !== 'password' && req.condition) {
+        delete req['condition']
         http
           .get('/auth/user/valDuplicated', req)
           .then(({ res }) => {
