@@ -12,6 +12,7 @@ public interface UserService {
 	User getUserByUserId(String userId);
 //	void modifyUser(String userId, UserRegisterPostReq userRegisterInfo);
 	
-	String getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo);
-	String getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	// 중복검사
+	Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo);
 }

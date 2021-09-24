@@ -63,25 +63,16 @@ public class UserServiceImpl implements UserService {
 	
 	// 유저 ID 중복검사
 	@Override
-	public String getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+	public Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo) {
 		// TODO Auto-generated method stub
 		
-		
-		System.out.println(userDuplicatedInfo.getContent());
-		
-		System.out.println(userRepository.findByUserId("test1"));
-		
-		if (userRepository.findByUserId(userDuplicatedInfo.getContent()).isPresent()) {
-			return "False";
-		} else return "True";
+		return userRepository.existsByUserId(userDuplicatedInfo.getContent());
 	}
 	// 유저 Nick 중복검사
 	@Override
-	public String getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+	public Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo) {
 		// TODO Auto-generated method stub
 		
-		if (userRepository.findByNickname(userDuplicatedInfo.getContent()).isPresent()) {
-			return "False";
-		} else return "True";
+		return userRepository.existsByNickname(userDuplicatedInfo.getContent());
 	}
 }

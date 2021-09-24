@@ -112,12 +112,11 @@ public class UserController {
 			
 			switch (valType) {
 			case "id":
-				System.out.println("id");
-				String userIdValRes = userService.getUserIdDuplicated(userduplicated);
+				Boolean userIdValRes = userService.getUserIdDuplicated(userduplicated);
 				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userIdValRes));
 
 			case "nickname":
-				String userNickValRes = userService.getUserNickDuplicated(userduplicated);
+				Boolean userNickValRes = userService.getUserNickDuplicated(userduplicated);
 				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userNickValRes));
 				
 			default:
@@ -126,7 +125,7 @@ public class UserController {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			return ResponseEntity.status(200).body(UserDuplicatedRes.of("Error"));
+			return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
 		} 
 	}
 	
