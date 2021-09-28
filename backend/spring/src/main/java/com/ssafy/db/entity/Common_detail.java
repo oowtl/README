@@ -13,8 +13,7 @@ import lombok.Setter;
 public class Common_detail extends BaseEntity{
 	
 	@ManyToOne
-	@JoinColumn(name = "common_cid")
-	private Common common;
+	private Common com;
 	
 	private String common_detail;
 

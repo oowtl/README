@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,21 +90,12 @@ public class UserServiceImpl implements UserService {
 	
 	// 유저 직업 반환
 	@Override
-	public ArrayList<String> getUserJob() {
+	public List getUserJob() {
 		// TODO Auto-generated method stub
 		
-		Common jcom = commonRepository.findByName("job");
+		Common jobkey = commonRepository.findByName("job");
+		List jobList = commonDetailRepository.findAllByCom(jobkey);
 		
-		System.out.println("@");
-		System.out.println(jcom);
-		System.out.println(jcom.getId());
-		System.out.println(jcom.getName());
-		
-		System.out.println("@@");
-		Common_detail jjc = commonDetailRepository.findById(1L).get();
-		System.out.println(jjc);
-		
-
-		return commonDetailRepository.findAllByCommon(jcom);
+		return jobList;
 	}
 }
