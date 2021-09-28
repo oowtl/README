@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
+
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
@@ -15,4 +17,6 @@ public interface UserService {
 	// 중복검사
 	Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo);
 	Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	
+	ArrayList<String> getUserJob();
 }

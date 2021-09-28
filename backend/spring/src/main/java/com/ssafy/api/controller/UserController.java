@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.response.UserCreateJobRes;
 import com.ssafy.api.response.UserDuplicatedRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
@@ -127,6 +129,20 @@ public class UserController {
 			// TODO: handle exception
 			return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
 		} 
+	}
+	
+	@GetMapping("create/job")
+	@ApiOperation( value = "회원가입 시 직업 리스트 반환", notes = "직업 리스트 반환")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "리스트 반환 성공"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<UserCreateJobRes> userJob () {
+		
+		
+		ArrayList<String> ujob = userService.getUserJob();
+		System.out.println(ujob);
+		return ResponseEntity.status(200).body(UserCreateJobRes.of(ujob));
 	}
 	
 //	@GetMapping("/modify")

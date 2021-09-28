@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.db.entity.Common;
+import com.ssafy.db.entity.Common_detail;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.CommonDetailRepository;
+import com.ssafy.db.repository.CommonRepository;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
@@ -19,6 +24,12 @@ import com.ssafy.db.repository.UserRepositorySupport;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	CommonRepository commonRepository;
+	
+	@Autowired
+	CommonDetailRepository commonDetailRepository;
 	
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
@@ -74,5 +85,25 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 		return userRepository.existsByNickname(userDuplicatedInfo.getContent());
+	}
+	
+	// 유저 직업 반환
+	@Override
+	public ArrayList<String> getUserJob() {
+		// TODO Auto-generated method stub
+		
+		Common jcom = commonRepository.findByName("job");
+		
+		System.out.println("@");
+		System.out.println(jcom);
+		System.out.println(jcom.getId());
+		System.out.println(jcom.getName());
+		
+		System.out.println("@@");
+		Common_detail jjc = commonDetailRepository.findById(1L).get();
+		System.out.println(jjc);
+		
+
+		return commonDetailRepository.findAllByCommon(jcom);
 	}
 }
