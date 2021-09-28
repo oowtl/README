@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,9 +141,9 @@ public class UserController {
 	public ResponseEntity<UserCreateJobRes> userJob () {
 		
 		
-		ArrayList<String> ujob = userService.getUserJob();
-		System.out.println(ujob);
-		return ResponseEntity.status(200).body(UserCreateJobRes.of(ujob));
+		List createJobList = userService.getUserJob();
+		System.out.println(createJobList);
+		return ResponseEntity.status(200).body(UserCreateJobRes.of(createJobList));
 	}
 	
 //	@GetMapping("/modify")
