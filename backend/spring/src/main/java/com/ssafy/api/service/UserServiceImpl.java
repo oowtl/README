@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserDuplicatedReq;
+import com.ssafy.api.request.UserMbtiReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.Common;
 import com.ssafy.db.entity.Common_detail;
@@ -97,5 +98,15 @@ public class UserServiceImpl implements UserService {
 		List jobList = commonDetailRepository.findAllByCom(jobkey);
 		
 		return jobList;
+	}
+	
+	@Override
+	public User changeUserMbti(String userId, UserMbtiReq userMbtiReq) {
+		// TODO Auto-generated method stub
+		
+		User user = userRepository.findByUserId(userId);
+		user.setMbti(userMbtiReq.getResult());
+		
+		return userRepository.save(user);
 	}
 }
