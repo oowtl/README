@@ -22,6 +22,7 @@ import com.ssafy.api.response.UserCreateJobRes;
 import com.ssafy.api.response.UserDuplicatedRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
+import com.ssafy.api.response.UserTendencyRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -175,29 +176,29 @@ public class UserController {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Fail"));
+			return ResponseEntity.status(500).body(BaseResponseBody.of(400, "Fail"));
 		}
 		
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 	
+	// 유저 tendency 검사를 위한 책 리스트 반환하기
+	@GetMapping("profile/tendency")
+	@ApiOperation(value = "유저 tendency 검사를 위한 책 리스트 반환하기", notes ="10권 정도 선택할 수 있도록 한다.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "반환 성공"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<UserTendencyRes> userTendencyTest () {
+		
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+		
+		return null;
+	}
 	
-	
-//	@GetMapping("/modify")
-//	@ApiOperation(value = "회원 본인 정보 수정", notes = "로그인한 회원 본인의 정보를 수정한다.") 
-//	@ApiResponses({
-//		@ApiResponse(code = 200, message = "성공"),
-//		@ApiResponse(code = 401, message = "인증 실패"),
-//		@ApiResponse(code = 404, message = "사용자 없음"),
-//		@ApiResponse(code = 500, message = "서버 오류")
-//	})
-//	public ResponseEntity<BaseResponseBody> modifyUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
-//		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//		String userId = userDetails.getUsername();
-//		System.out.println("come in");
-//		userService.modifyUser(userId, registerInfo);
-//		
-////		return ResponseEntity.status(200).body(UserRes.of(user));
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-//	}
 }
