@@ -8,7 +8,8 @@
   >
     <div class="md-toolbar-row md-collapse-lateral">
       <div class="md-toolbar-section-start">
-        <h3 class="md-title">Vue Material Kit</h3>
+        <h3 class="md-title">ReadME</h3>
+        <a href="/signup"></a>
       </div>
       <div class="md-toolbar-section-end">
         <md-button
@@ -54,7 +55,7 @@
                             href="https://demos.creative-tim.com/vue-material-kit/documentation/"
                           >
                             <i class="material-icons">content_paste</i>
-                            <p>Documentation</p>
+                            <p>성향 검사</p>
                           </a>
                         </li>
                       </ul>
@@ -69,16 +70,15 @@
                 v-if="showDownload"
               >
                 <i class="material-icons">content_paste</i>
-                <p>Documentation</p>
+                <p>책성향 검사</p>
               </md-list-item>
 
               <md-list-item
-                href="javascript:void(0)"
+                href="http://localhost:3000/signup"
                 @click="scrollToElement()"
                 v-if="showDownload"
               >
-                <i class="material-icons">cloud_download</i>
-                <p>Download</p>
+                <p>회원가입</p>
               </md-list-item>
 
               <li class="md-list-item" v-else>
