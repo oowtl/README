@@ -16,5 +16,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	// 메소드명 규칙?
 	// Optional 타입으로 반환?? => UserRepositorySupport
 	// findBy, countBy
-    Optional<User> findByUserId(String userId);
+    User findByUserId(String userId);
+    Optional<User> findByNickname(String nickname);
+    
+    // 중복 검사
+    boolean existsByUserId(String userId);
+    boolean existsByNickname(String nickname);
 }

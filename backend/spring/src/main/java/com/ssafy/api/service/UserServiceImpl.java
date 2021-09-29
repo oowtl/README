@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserDuplicatedReq;
+import com.ssafy.api.request.UserMbtiReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.db.entity.Common;
+import com.ssafy.db.entity.Common_detail;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.CommonDetailRepository;
+import com.ssafy.db.repository.CommonRepository;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
@@ -19,6 +26,12 @@ import com.ssafy.db.repository.UserRepositorySupport;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	CommonRepository commonRepository;
+	
+	@Autowired
+	CommonDetailRepository commonDetailRepository;
 	
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
@@ -61,13 +74,39 @@ public class UserServiceImpl implements UserService {
 //		
 //	}
 	
-	// 중복검사하기
+	// 유저 ID 중복검사
 	@Override
-	public String getUserDuplicted(UserDuplicatedReq userDuplicatedInfo) {
+	public Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo) {
 		// TODO Auto-generated method stub
 		
+		return userRepository.existsByUserId(userDuplicatedInfo.getContent());
+	}
+	// 유저 Nick 중복검사
+	@Override
+	public Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+		// TODO Auto-generated method stub
 		
+		return userRepository.existsByNickname(userDuplicatedInfo.getContent());
+	}
+	
+	// 유저 직업 반환
+	@Override
+	public List getUserJob() {
+		// TODO Auto-generated method stub
 		
-		return "!";
+		Common jobkey = commonRepository.findByName("job");
+		List jobList = commonDetailRepository.findAllByCom(jobkey);
+		
+		return jobList;
+	}
+	
+	@Override
+	public User changeUserMbti(String userId, UserMbtiReq userMbtiReq) {
+		// TODO Auto-generated method stub
+		
+		User user = userRepository.findByUserId(userId);
+		user.setMbti(userMbtiReq.getResult());
+		
+		return userRepository.save(user);
 	}
 }

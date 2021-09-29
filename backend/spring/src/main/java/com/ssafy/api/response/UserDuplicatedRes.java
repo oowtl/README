@@ -14,9 +14,9 @@ import lombok.Setter;
 @ApiModel("UserDuplicatedRes")
 public class UserDuplicatedRes extends BaseResponseBody {
 	@ApiModelProperty(name = "결과", example="True")
-	String result;
+	Boolean result;
 	
-	public static UserDuplicatedRes of(String res) {
+	public static UserDuplicatedRes of(Boolean res) {
 		UserDuplicatedRes r = new UserDuplicatedRes();
 		r.setResult(res);
 		return r;
