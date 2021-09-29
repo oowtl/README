@@ -12,7 +12,7 @@
               <br>
 
              <md-button class="md-primary">
-               <a href="http://j5d104.p.ssafy.io/signup">회원가입</a>
+               <a href="/signup">회원가입</a>
              </md-button>
             </div>
           </div>
