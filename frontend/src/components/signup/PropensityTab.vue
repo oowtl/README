@@ -25,8 +25,10 @@
 </template>
 
 <script>
+
 export default {
     props: {
+        index : Number,
         flexColumn: Boolean,
         navPillsIcons: Boolean,
         plain: Boolean,
@@ -43,6 +45,7 @@ export default {
     },
     methods: {
         switchPanel(panel) {
+            this.$store.dispatch('setPropensity', {"index" : this.index, "panel" : panel});
             this.activePanel = panel;
         },
         isActivePanel(panel) {
@@ -50,7 +53,8 @@ export default {
         },
         getColorButton: function(colorButton) {
             return "md-" + colorButton + "";
-        }
+        },
+
     }
 };
 </script>

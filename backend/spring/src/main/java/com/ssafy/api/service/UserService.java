@@ -1,6 +1,10 @@
 package com.ssafy.api.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ssafy.api.request.UserDuplicatedReq;
+import com.ssafy.api.request.UserMbtiReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
 
@@ -11,5 +15,15 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 //	void modifyUser(String userId, UserRegisterPostReq userRegisterInfo);
-	String getUserDuplicted(UserDuplicatedReq userDuplicatedInfo);
+	
+	// 중복검사
+	Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	
+	// 직업 리스트 반환
+	List getUserJob();
+	
+	// MBTI 수정하기
+	User changeUserMbti(String userId, UserMbtiReq userMbtiReq);
+	
 }

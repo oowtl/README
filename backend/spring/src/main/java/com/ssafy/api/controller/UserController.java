@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserLoginPostReq;
+import com.ssafy.api.request.UserMbtiReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.response.UserCreateJobRes;
 import com.ssafy.api.response.UserDuplicatedRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
@@ -23,6 +27,7 @@ import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
 import io.swagger.annotations.Api;
@@ -110,17 +115,73 @@ public class UserController {
 				throw er;
 			}
 			
-			String valRes = userService.getUserDuplicted(userduplicated);
-			
+			switch (valType) {
+			case "id":
+				Boolean userIdValRes = userService.getUserIdDuplicated(userduplicated);
+				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userIdValRes));
+
+			case "nickname":
+				Boolean userNickValRes = userService.getUserNickDuplicated(userduplicated);
+				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userNickValRes));
+				
+			default:
+				throw er;
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("NONONONON");
-			return ResponseEntity.status(200).body(UserDuplicatedRes.of("False"));
+			return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
 		} 
-		
-		return ResponseEntity.status(200).body(UserDuplicatedRes.of("True"));
 	}
+	
+	// 회원 가입 시 리스트 반환
+	@GetMapping("create/job")
+	@ApiOperation( value = "회원가입 시 직업 리스트 반환", notes = "직업 리스트 반환")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "리스트 반환 성공"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<UserCreateJobRes> userJob () {
+		
+		try {
+			List createJobList = userService.getUserJob();
+			return ResponseEntity.status(200).body(UserCreateJobRes.of(createJobList));
+		} catch (Exception e) {
+			// TODO: handle exception
+			List er = new ArrayList();
+			return ResponseEntity.status(500).body(UserCreateJobRes.of(er));
+		}
+	}
+	
+	
+	// user mbti 저장하기
+	@PostMapping("profile/mbti")
+	@ApiOperation( value = "유저 mbti 수정 및 등록", notes = "mbti 수정 및 등록")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = " 수정 및 등록 성공"),
+		@ApiResponse(code = 500, message = " 서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> userMbti (
+			@ApiIgnore Authentication authentication,
+			@RequestBody UserMbtiReq userMbti
+			) {
+		
+		// 로그인 검사
+		try {
+			SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+			String userId = userDetails.getUsername();
+			// mbti 추가
+			User user = userService.changeUserMbti(userId, userMbti);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Fail"));
+		}
+		
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
+	
+	
 	
 //	@GetMapping("/modify")
 //	@ApiOperation(value = "회원 본인 정보 수정", notes = "로그인한 회원 본인의 정보를 수정한다.") 
