@@ -36,6 +36,15 @@ def add_author (book_author, a_set, book_id):
             book_author_sql = f"INSERT INTO book_author (book_bid, author_aid) VALUES ('{book_id}', '{cursor.lastrowid}');"
             cursor.execute(book_author_sql)
             mydb.commit()
+        else:
+            author_sql = f"SELECT * FROM table_author WHERE author = '{book_author}';"
+            cursor.execute(author_sql)
+            result = cursor.fetchall()
+            book_author_sql = f"INSERT INTO book_author (book_bid, author_id) VALUES ('{book_id}', '{result[0][0]}');"
+            cursor.execute(book_author_sql)
+            mydb.commit()
+
+
     else:
         for au in book_author:
             if au not in a_set:
@@ -45,6 +54,13 @@ def add_author (book_author, a_set, book_id):
                 mydb.commit()
                 # book_author   
                 book_author_sql = f"INSERT INTO book_author (book_bid, author_aid) VALUES ('{book_id}', '{cursor.lastrowid}');"
+                cursor.execute(book_author_sql)
+                mydb.commit()
+            else:
+                author_sql = f"SELECT * FROM table_author WHERE author = '{book_author}';"
+                cursor.execute(author_sql)
+                result = cursor.fetchall()
+                book_author_sql = f"INSERT INTO book_author (book_bid, author_id) VALUES ('{book_id}', '{result[0][0]}');"
                 cursor.execute(book_author_sql)
                 mydb.commit()
     
@@ -57,10 +73,16 @@ def add_genre (book_genre, g_set, book_id):
             table_genre_sql  = f"INSERT INTO table_genre (genre) VALUES ('{gen}');"
             cursor.execute(table_genre_sql)
             mydb.commit()
-
+            # book_genre
             book_genre_sql = f"INSERT INTO book_genre (book_bid, genre_gid) VALUES ('{book_id}', '{cursor.lastrowid}');"
             cursor.execute(book_genre_sql)
             mydb.commit()
+        else:
+            genre_sql = f"SELECT * FROM table_genre WHERE genre = '{book_genre};"
+            cursor.execute(genre_sql)
+            result = cursor.fetchall()
+            book_genre_sql = f"INSERT INRO book_genre (book_id, genre_id) VALUES ('{book_id}', '{result[0][0]}');"
+
 
 # table_keyword 추가
 def add_kw (book_kw, kw_set, book_id):
@@ -105,7 +127,7 @@ with open(file_path, "r", encoding='UTF-8') as json_file:
             add_genre(book['genre'], g_set, book_id)
 
             # table_keyword 테이블
-            # add_kw(book['keyword'], kw_set, book_id)
+            add_kw(book['topic'], kw_set, book_id)
 
 
         except Exception as error:
