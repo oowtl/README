@@ -1,4 +1,5 @@
 <template>
+    <div>
     <login-card>
         <md-field slot="inputs" :class="[!getSignupCheck.id.condition.flag || !getSignupCheck.id.duplicate.flag ? 'md-error' : 'md-valid']">
             <md-icon>face</md-icon>
@@ -62,6 +63,7 @@
             </div>
         </md-field>
     </login-card>
+    </div>
 </template>
 
 <script>
@@ -117,8 +119,10 @@ export default {
             };
             if(type === 'id'){
                 data["content"] = this.id;
-            }else {
+            }else if(type === 'nickname') {
                 data["content"] = this.nickname
+            }else{
+                data["content"] = this.password
             }
             this.$store.dispatch('signupCheck', data);
         },
