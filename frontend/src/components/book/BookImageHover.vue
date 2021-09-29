@@ -5,7 +5,7 @@
                 <img :src="book.img" width="300px" height="450px"/>
                 <figcaption>
                     <h3>{{book.title}}</h3>
-                    <p>{{book.image}}</p>
+                    <p>{{book.story}}</p>
                     
                 </figcaption>
                 <a href="#"></a>
