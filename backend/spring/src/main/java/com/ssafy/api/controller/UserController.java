@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,6 @@ import com.ssafy.api.response.UserCreateJobRes;
 import com.ssafy.api.response.UserDuplicatedRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
-import com.ssafy.api.response.UserTendencyRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -93,14 +93,16 @@ public class UserController {
 		return ResponseEntity.status(200).body(UserRes.of(user));
 	}
 	
-	@GetMapping("/valDuplicated")
+	@GetMapping("/valDuplicated/{val}/{content}")
 	@ApiOperation(value = "아이디, 닉네임 중복체크", notes = "회원가입 시 중복체크 진행")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "검사 성공"),
 		@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<UserDuplicatedRes> duplicateUser (
-			@RequestBody UserDuplicatedReq userduplicated) {
+			@RequestBody UserDuplicatedReq userduplicated,
+			@PathVariable("val") String val,
+			@PathVariable("content") String content) {
 		
 		// 1차 검사 val 이 잘 들어왔는가?
 		try {
@@ -108,8 +110,8 @@ public class UserController {
 			Exception er = new Exception();
 
 			// val 검사
-			String valType = userduplicated.getVal();
-			String valContent = userduplicated.getContent();
+			String valType = val;
+			String valContent = content;
 			
 			// 내용 없음
 			if ("".equals(valType) || "".equals(valContent) ) {
@@ -183,22 +185,22 @@ public class UserController {
 	}
 	
 	// 유저 tendency 검사를 위한 책 리스트 반환하기
-	@GetMapping("profile/tendency")
-	@ApiOperation(value = "유저 tendency 검사를 위한 책 리스트 반환하기", notes ="10권 정도 선택할 수 있도록 한다.")
-	@ApiResponses({
-		@ApiResponse(code = 200, message = "반환 성공"),
-		@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<UserTendencyRes> userTendencyTest () {
-		
-		try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			return null;
-		}
-		
-		return null;
-	}
+//	@GetMapping("profile/tendency")
+//	@ApiOperation(value = "유저 tendency 검사를 위한 책 리스트 반환하기", notes ="10권 정도 선택할 수 있도록 한다.")
+//	@ApiResponses({
+//		@ApiResponse(code = 200, message = "반환 성공"),
+//		@ApiResponse(code = 500, message = "서버 오류")
+//	})
+//	public ResponseEntity<UserTendencyRes> userTendencyTest () {
+//		
+//		try {
+//			
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			return null;
+//		}
+//		
+//		return null;
+//	}
 	
 }
