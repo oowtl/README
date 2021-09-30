@@ -43,7 +43,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Api(value = "유저 API", tags = {"User"})
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/auth/user")
 public class UserController {
 	
 	@Autowired
@@ -103,12 +103,15 @@ public class UserController {
 			@PathVariable("val") String val,
 			@PathVariable("content") String content) {
 		
+		System.out.println(val + content);
+		
 		// 1차 검사 val 이 잘 들어왔는가?
 		try {		
 			Exception er = new Exception();
 			// val 검사
 			String valType = val;
 			String valContent = content;
+			
 			// 내용 없음
 			if ("".equals(valType) || "".equals(valContent) ) {
 				throw er;
