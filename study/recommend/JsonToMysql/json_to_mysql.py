@@ -5,21 +5,11 @@ import json
 # 데이터 경로
 file_path = "./book_data_2t.json"
 
-# db 접속
-mydb = pymysql.connect(
-    user='root',
-    passwd='root',
-    host='127.0.0.1',
-    db='ssafy_pjt',
-    charset='utf8'
-)
-
-cursor = mydb.cursor()
-
 # book 추가
 def add_book (book):
     book_price = int(book['price'].replace(',', ''))
-    book_sql = f"INSERT INTO book (title, publisher, story, price, img) VALUES ('{book['title']}', '{book['publisher']}', '{book['story']}', '{book_price}', '{book['img']}');"
+    book_story = book['story'].replace("'","''")
+    book_sql = f"INSERT INTO book (title, publisher, story, price, img) VALUES ('{book['title']}', '{book['publisher']}', '{book_story}', '{book_price}', '{book['img']}');"
     cursor.execute(book_sql)
     mydb.commit()
     return cursor.lastrowid
@@ -118,6 +108,18 @@ with open(file_path, "r", encoding='UTF-8') as json_file:
     book_data = json.load(json_file)
 
     for book in book_data:
+
+        # db 접속
+        mydb = pymysql.connect(
+            user='root',
+            passwd='root',
+            host='127.0.0.1',
+            db='ssafy_pjt',
+            charset='utf8'
+        )
+
+        cursor = mydb.cursor()
+
         
         try:
             # book 테이블 : title, story, publisher, price, img
@@ -132,5 +134,8 @@ with open(file_path, "r", encoding='UTF-8') as json_file:
             # table_keyword 테이블
             add_kw(book['topic'], kw_set, book_id)
 
+            cursor.close()
+
         except Exception as error:
             print(error)
+            cursor.close()

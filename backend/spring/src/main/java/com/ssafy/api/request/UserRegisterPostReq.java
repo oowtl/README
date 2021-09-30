@@ -1,5 +1,7 @@
 package com.ssafy.api.request;
 
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -22,4 +24,8 @@ public class UserRegisterPostReq {
 	Integer age;
 	@ApiModelProperty(name="유저 sex", example="male")
 	String sex;
+	@ApiModelProperty(name="유저 MBTI", example="enfp")
+	String mbti;
+	@ApiModelProperty(name="유저 경향성", example="[{id: 1, check: 0}, {id:2, check: 1}, ...]")
+	List tendency;
 }

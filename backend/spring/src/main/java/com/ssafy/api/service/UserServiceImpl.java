@@ -46,10 +46,14 @@ public class UserServiceImpl implements UserService {
 		user.setUserId(userRegisterInfo.getUserId());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
-		
+		// 일반 정보 저장
 		user.setNickname(userRegisterInfo.getNickname());
 		user.setAge(userRegisterInfo.getAge());
 		user.setSex(userRegisterInfo.getSex());
+		user.setMbti(userRegisterInfo.getMbti());
+		// tendency
+		
+		
 		
 		// jpaRepository의 save가 데이터가 새로 추가되면 insert를 실행
 		return userRepository.save(user);
