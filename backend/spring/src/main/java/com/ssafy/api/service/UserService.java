@@ -17,8 +17,8 @@ public interface UserService {
 //	void modifyUser(String userId, UserRegisterPostReq userRegisterInfo);
 	
 	// 중복검사
-	Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo);
-	Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo);
+	ArrayList<User> getUserIdDuplicated(String content);
+	ArrayList<User> getUserNickDuplicated(String content);
 	
 	// 직업 리스트 반환
 	List getUserJob();

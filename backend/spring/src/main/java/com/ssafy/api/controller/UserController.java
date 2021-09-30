@@ -100,19 +100,15 @@ public class UserController {
 		@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<UserDuplicatedRes> duplicateUser (
-			@RequestBody UserDuplicatedReq userduplicated,
 			@PathVariable("val") String val,
 			@PathVariable("content") String content) {
 		
 		// 1차 검사 val 이 잘 들어왔는가?
-		try {
-			
+		try {		
 			Exception er = new Exception();
-
 			// val 검사
 			String valType = val;
 			String valContent = content;
-			
 			// 내용 없음
 			if ("".equals(valType) || "".equals(valContent) ) {
 				throw er;
@@ -120,13 +116,22 @@ public class UserController {
 			
 			switch (valType) {
 			case "id":
-				Boolean userIdValRes = userService.getUserIdDuplicated(userduplicated);
-				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userIdValRes));
-
-			case "nickname":
-				Boolean userNickValRes = userService.getUserNickDuplicated(userduplicated);
-				return ResponseEntity.status(200).body(UserDuplicatedRes.of(userNickValRes));
+				ArrayList<User> userIdValRes = userService.getUserIdDuplicated(content);
+				if (userIdValRes.isEmpty()) {
+					return ResponseEntity.status(200).body(UserDuplicatedRes.of(true));
+				}
+				else {
+					return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
+				}
+			case "nick":
+				ArrayList<User> userNickValRes = userService.getUserNickDuplicated(content);
 				
+				if (userNickValRes.isEmpty()) {					
+					return ResponseEntity.status(200).body(UserDuplicatedRes.of(true));
+				}
+				else {
+					return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
+				}
 			default:
 				throw er;
 			}

@@ -80,17 +80,17 @@ public class UserServiceImpl implements UserService {
 	
 	// 유저 ID 중복검사
 	@Override
-	public Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+	public ArrayList<User> getUserIdDuplicated(String content) {
 		// TODO Auto-generated method stub
 		
-		return userRepository.existsByUserId(userDuplicatedInfo.getContent());
+		return userRepository.findAllByUserId(content);
 	}
 	// 유저 Nick 중복검사
 	@Override
-	public Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+	public ArrayList<User> getUserNickDuplicated(String content) {
 		// TODO Auto-generated method stub
 		
-		return userRepository.existsByNickname(userDuplicatedInfo.getContent());
+		return userRepository.findAllByNickname(content);
 	}
 	
 	// 유저 직업 반환
