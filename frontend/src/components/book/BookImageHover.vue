@@ -2,10 +2,10 @@
     <div>
         <div>
             <figure class="snip1273">
-                <img :src="book.img" width="300px" height="450px"/>
+                <img :src="bookInfo.img" width="300px" height="450px"/>
                 <figcaption>
-                    <h3>{{book.title}}</h3>
-                    <p>{{book.story}}</p>
+                    <h3>{{bookInfo.title}}</h3>
+                    <p>{{bookInfo.story}}</p>
                     
                 </figcaption>
                 <a href="#"></a>
@@ -49,7 +49,8 @@ export default {
         return {
             responsive: false,
             index : 0,
-            book : {}
+            bookInfo : {},
+            bookPropensity = []
         };
     },
     methods: {
@@ -57,9 +58,8 @@ export default {
             if(this.index < 3){
                 console.log(flag);
                 this.index += 1;
-                this.book = this.getBookPropensity[this.index];
-                console.log(this.index);
-                console.log(this.book);
+                this.bookInfo = this.getBookPropensity[this.index];
+                this.bookPropensity.push(flag);
             }else{
                 alert("끝");
             }
