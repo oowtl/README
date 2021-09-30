@@ -43,25 +43,26 @@
 import { mapGetters } from 'vuex';
 export default {
     created(){
-        this.book = this.getBookPropensity[0]
+        this.bookInfo = this.getBookPropensity[0]
     },
     data() {
         return {
             responsive: false,
             index : 0,
             bookInfo : {},
-            bookPropensity = []
+            bookPropensity : []
         };
     },
     methods: {
         getBookInfo(flag){
-            if(this.index < 3){
+            if(this.index < 2){
                 console.log(flag);
+                this.bookPropensity.push({"id" : this.bookInfo.id, "check" : flag});
                 this.index += 1;
                 this.bookInfo = this.getBookPropensity[this.index];
-                this.bookPropensity.push(flag);
+                console.log(this.bookPropensity);
             }else{
-                alert("끝");
+                this.$store.dispatch('');
             }
         }
     },
@@ -70,7 +71,7 @@ export default {
     },
     watch : {
         index : function(){
-            this.book = this.getBookPropensity[this.index];
+            this.bookInfo = this.getBookPropensity[this.index];
         }
     }
 }

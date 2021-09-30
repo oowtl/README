@@ -1,13 +1,12 @@
 <template>
     <div>
     <login-card>
-        <md-field slot="inputs" :class="[!getSignupCheck.id.condition.flag || !getSignupCheck.id.duplicate.flag ? 'md-error' : 'md-valid']">
+        <md-field slot="inputs" :class="[getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag ? 'md-valid' : 'md-error']">
             <md-icon>face</md-icon>
             <label>ID</label>
             <md-input v-model="id" type="text" @keyup="duplicateCheck('id')"></md-input>
             <template v-if="getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag">
                 <md-icon>done</md-icon>
-                
             </template>
             <template v-else-if="getSignupCheck.id.condition.flag === false">
                 <span class="md-helper-text">{{getSignupCheck.id.condition.msg}}</span>
@@ -19,7 +18,7 @@
             </template>
         </md-field>
 
-        <md-field slot="inputs" :class="[!getSignupCheck.nickname.condition.flag || !getSignupCheck.nickname.duplicate.flag ? 'md-error' : 'md-valid']">
+        <md-field slot="inputs" :class="[getSignupCheck.nickname.condition.flag && getSignupCheck.nickname.duplicate.flag ? 'md-valid' : 'md-error']">
             <md-icon>supervisor_account</md-icon>
             <label>NickName</label>
             <md-input v-model="nickname" type="text" @keyup="duplicateCheck('nickname')"></md-input>
@@ -62,6 +61,7 @@
                 <md-icon>clear</md-icon>
             </div>
         </md-field>
+        <div>{{getSignupCheck}}</div>
     </login-card>
     </div>
 </template>
