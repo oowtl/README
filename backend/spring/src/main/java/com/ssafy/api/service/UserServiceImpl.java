@@ -46,10 +46,14 @@ public class UserServiceImpl implements UserService {
 		user.setUserId(userRegisterInfo.getUserId());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
-		
+		// 일반 정보 저장
 		user.setNickname(userRegisterInfo.getNickname());
 		user.setAge(userRegisterInfo.getAge());
 		user.setSex(userRegisterInfo.getSex());
+		user.setMbti(userRegisterInfo.getMbti());
+		// tendency
+		
+		
 		
 		// jpaRepository의 save가 데이터가 새로 추가되면 insert를 실행
 		return userRepository.save(user);
@@ -76,17 +80,17 @@ public class UserServiceImpl implements UserService {
 	
 	// 유저 ID 중복검사
 	@Override
-	public Boolean getUserIdDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+	public ArrayList<User> getUserIdDuplicated(String content) {
 		// TODO Auto-generated method stub
 		
-		return userRepository.existsByUserId(userDuplicatedInfo.getContent());
+		return userRepository.findAllByUserId(content);
 	}
 	// 유저 Nick 중복검사
 	@Override
-	public Boolean getUserNickDuplicated(UserDuplicatedReq userDuplicatedInfo) {
+	public ArrayList<User> getUserNickDuplicated(String content) {
 		// TODO Auto-generated method stub
 		
-		return userRepository.existsByNickname(userDuplicatedInfo.getContent());
+		return userRepository.findAllByNickname(content);
 	}
 	
 	// 유저 직업 반환
