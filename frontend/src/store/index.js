@@ -98,7 +98,7 @@ export default new Vuex.Store({
       if (req.val !== 'password' && req.condition) {
         delete req['condition']
         http
-          .get('/auth/user/valDuplicated', req)
+          .get('/auth/user/valDuplicated/' + req.val + "/" + req.content)
           .then(({ res }) => {
               result["duplicate"] = res.result;
           })
