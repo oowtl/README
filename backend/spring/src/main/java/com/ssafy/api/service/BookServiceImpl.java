@@ -87,7 +87,6 @@ public class BookServiceImpl implements BookService {
 		// TODO Auto-generated method stub
 		
 		Book book = bookRepository.findById(bookId).get();
-		System.out.println(1);
 		Book_review review = new Book_review();
 		review.setPoint(bookReviewInfo.getScore());
 		review.setContent(bookReviewInfo.getContent());
@@ -95,5 +94,40 @@ public class BookServiceImpl implements BookService {
 		review.setUser(user);
 		
 		return bookReviewRepository.save(review);
+	}
+	
+	@Override
+	public List<Book_like> getUserLike(User user, Long bookId) {
+		// TODO Auto-generated method stub
+		
+		Book book = bookRepository.findById(bookId).orElseThrow(null);
+		List<Book_like> existLike = bookLikeRepository.findAllByUserAndBook(user, book);
+		
+		return existLike;
+	}
+	
+	
+	@Override
+	public Book_like saveLike(User user, Long bookId) {
+		// TODO Auto-generated method stub
+		
+		Book book = bookRepository.findById(bookId).get();
+		Book_like like = new Book_like();
+		like.setBook(book);
+		like.setUser(user);
+	
+		return bookLikeRepository.save(like);
+	}
+	
+	@Override
+	public Boolean deleteLike(User user, Long bookId) {
+		// TODO Auto-generated method stub
+		
+		Book book = bookRepository.findById(bookId).get();
+		List<Book_like> likeList = bookLikeRepository.findAllByUserAndBook(user, book);
+		
+		bookLikeRepository.delete(likeList.get(0));
+		
+		return true;
 	}
 }
