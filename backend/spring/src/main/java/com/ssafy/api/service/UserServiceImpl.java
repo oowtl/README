@@ -16,6 +16,8 @@ import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Book_author;
 import com.ssafy.db.entity.Book_genre;
+import com.ssafy.db.entity.Book_like;
+import com.ssafy.db.entity.Book_tendency;
 import com.ssafy.db.entity.Common;
 import com.ssafy.db.entity.Common_detail;
 import com.ssafy.db.entity.Table_author;
@@ -23,7 +25,9 @@ import com.ssafy.db.entity.Table_genre;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookAuthorRepository;
 import com.ssafy.db.repository.BookGenreRepository;
+import com.ssafy.db.repository.BookLikeRepository;
 import com.ssafy.db.repository.BookRepository;
+import com.ssafy.db.repository.BookTendencyRepository;
 import com.ssafy.db.repository.CommonDetailRepository;
 import com.ssafy.db.repository.CommonRepository;
 import com.ssafy.db.repository.TableAuthorRepository;
@@ -40,16 +44,22 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 	
 	@Autowired
-	TableGenreRepository tableGenreRepository;
+	BookRepository bookRepository;
 	
 	@Autowired
 	BookGenreRepository bookGenreRepository;
 	
 	@Autowired
-	BookRepository bookRepository;
+	BookAuthorRepository bookAuthorRepository;
 	
 	@Autowired
-	BookAuthorRepository bookAuthorRepository;
+	BookLikeRepository bookLikeRepository;
+	
+	@Autowired
+	BookTendencyRepository bookTendencyRepository;
+	
+	@Autowired
+	TableGenreRepository tableGenreRepository;
 	
 	@Autowired
 	TableAuthorRepository tableAuthorRepository;
@@ -78,12 +88,32 @@ public class UserServiceImpl implements UserService {
 		user.setAge(userRegisterInfo.getAge());
 		user.setSex(userRegisterInfo.getSex());
 		user.setMbti(userRegisterInfo.getMbti());
+		
+		User createUser = userRepository.save(user); 
 		// tendency
 		
-		
-		
+		List<HashMap<String, Integer>> tenList = userRegisterInfo.getTendency(); 
+		for (int i = 0; i < tenList.size(); i++) {
+			if (tenList.get(i).get("check") == 0) {
+				
+				Book chBook = bookRepository.findOneById(tenList.get(i).get("id").longValue()).get();
+				
+				// 좋아요
+				Book_like blike = new Book_like();
+				blike.setBook(chBook);
+				blike.setUser(createUser);
+				bookLikeRepository.save(blike);
+				
+				// tendency
+				Book_tendency bten = new Book_tendency();
+				bten.setBook(chBook);
+				bten.setUser(createUser);
+				bookTendencyRepository.save(bten);
+				
+			}
+		}
 		// jpaRepository의 save가 데이터가 새로 추가되면 insert를 실행
-		return userRepository.save(user);
+		return createUser;
 	}
 
 	@Override

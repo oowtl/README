@@ -64,12 +64,18 @@ public class UserController {
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		
 		if(userService.getUserByUserId(registerInfo.getUserId())==null) {
-			System.out.println("중복되는 아이디가 없습니다. SUCCESS!");
-			User user = userService.createUser(registerInfo);
-			return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
+//			System.out.println("중복되는 아이디가 없습니다. SUCCESS!");
+			try {
+				User user = userService.createUser(registerInfo);
+				return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
+			} catch (Exception e) {
+				// TODO: handle exception
+				return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Failure"));
+			}
+			
 		} else {
-			System.out.println("중복되는 아이디가 있습니다. FAIL!");
-			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Failure"));
+//			System.out.println("중복되는 아이디가 있습니다. FAIL!");
+			return ResponseEntity.status(500).body(BaseResponseBody.of(400, "Failure"));
 		}
 	}
 	
