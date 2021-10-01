@@ -2,6 +2,7 @@
     <div>
     <login-card>
         <md-field slot="inputs" :class="[getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag ? 'md-valid' : 'md-error']">
+            <div>{{getSignupCheck.id}}</div>
             <md-icon>face</md-icon>
             <label>ID</label>
             <md-input v-model="id" type="text" @keyup="duplicateCheck('id')"></md-input>
@@ -61,7 +62,7 @@
                 <md-icon>clear</md-icon>
             </div>
         </md-field>
-        <div>{{getSignupCheck}}</div>
+        
     </login-card>
     </div>
 </template>

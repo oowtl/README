@@ -94,24 +94,25 @@ export default new Vuex.Store({
     // 회원가입시 ID, Nickname, Password 검사
     signupCheck({ commit }, req) {
       var result = {
-        type: req.val,
-        condition: req.condition,
-        duplicate: false,
-        content : req.content
+        'type': req.val,
+        'condition': req.condition,
+        'duplicate': false,
+        'content' : req.content
       };
       if (req.val !== 'password' && req.condition) {
         http
           .get('/auth/user/valDuplicated/' + req.val + '/' + req.content)
           .then(({ data }) => {
-              result.duplicate = data.result;
+            result.duplicate = data.result;
+            commit("SIGNUP_CHECK", result);
           })
           .catch(() => {
             console.log("500에러");
           })
       } else if (req.val === 'password') {
         result.duplicate = true;
+        commit("SIGNUP_CHECK", result);
       }
-      commit("SIGNUP_CHECK", result);
     },
     // 비밀번호 확인 검사
     passwordCheck({ commit }, flag) {
