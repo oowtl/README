@@ -2,6 +2,7 @@ package com.ssafy.api.response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,13 +14,12 @@ import lombok.Setter;
 @ApiModel("UserTendencyRes")
 public class UserTendencyRes {
 	@ApiModelProperty(name = "contents", example = "{id: 1, title: ..., author, ...}")
-	ArrayList<HashMap<String, Object>>contents;
+	List<Object> contents;
 	
 	
-	public static UserTendencyRes of(ArrayList<HashMap<String, Object>>contents) {
-		
-		
-		
-		return null;
+	public static UserTendencyRes of(List<Object> contents) {
+		UserTendencyRes	res = new UserTendencyRes();
+		res.setContents(contents);
+		return res;
 	}
 }

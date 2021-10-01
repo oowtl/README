@@ -1,8 +1,10 @@
 package com.ssafy.api.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,11 +13,21 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserMbtiReq;
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.db.entity.Book;
+import com.ssafy.db.entity.Book_author;
+import com.ssafy.db.entity.Book_genre;
 import com.ssafy.db.entity.Common;
 import com.ssafy.db.entity.Common_detail;
+import com.ssafy.db.entity.Table_author;
+import com.ssafy.db.entity.Table_genre;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.BookAuthorRepository;
+import com.ssafy.db.repository.BookGenreRepository;
+import com.ssafy.db.repository.BookRepository;
 import com.ssafy.db.repository.CommonDetailRepository;
 import com.ssafy.db.repository.CommonRepository;
+import com.ssafy.db.repository.TableAuthorRepository;
+import com.ssafy.db.repository.TableGenreRepository;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
@@ -26,6 +38,21 @@ import com.ssafy.db.repository.UserRepositorySupport;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	TableGenreRepository tableGenreRepository;
+	
+	@Autowired
+	BookGenreRepository bookGenreRepository;
+	
+	@Autowired
+	BookRepository bookRepository;
+	
+	@Autowired
+	BookAuthorRepository bookAuthorRepository;
+	
+	@Autowired
+	TableAuthorRepository tableAuthorRepository;
 	
 	@Autowired
 	CommonRepository commonRepository;
@@ -112,5 +139,37 @@ public class UserServiceImpl implements UserService {
 		user.setMbti(userMbtiReq.getResult());
 		
 		return userRepository.save(user);
+	}
+	
+	@Override
+	public List getTendencyBooks() {
+		// TODO Auto-generated method stub
+		
+		List<Object> tendencyBooks = new ArrayList<Object>();
+		
+		// 장르 키워드 (임의 선정)
+		// 4 한국 소설, 6 로맨스 소설, 54 과학, 88 철학, 94 미술, 105 취미/실용/스포츠, 121 종교일반, 133 역사 문화, 143 성공/처세, 250 경제일반
+		Long choiceGenre[] = new Long[] {4L, 6L, 54L, 88L, 94L, 105L, 121L, 133L, 143L, 250L};
+		
+		Random ran = new Random();
+		
+		for (int i = 0; i < choiceGenre.length; i++) {
+			
+			HashMap<String, Object> bookInfo = new HashMap();
+			Table_genre genreTable = tableGenreRepository.findById(choiceGenre[i]).get();
+			ArrayList<Book_genre> bgList = (ArrayList<Book_genre>) bookGenreRepository.findFirst10ByGenre(genreTable);
+			int listChoice = ran.nextInt(bgList.size());
+			Book tbook = bookRepository.findOneById(bgList.get(listChoice).getBook().getId()).get();
+			Book_author bookAuthor = bookAuthorRepository.findOneByBook(tbook);
+			// id, title, author, story, img
+			bookInfo.put("id", tbook.getId());
+			bookInfo.put("title", tbook.getTitle());
+			bookInfo.put("author", bookAuthor.getAuthor_aid().getAuthor());
+			bookInfo.put("story", tbook.getStory());
+			bookInfo.put("img", tbook.getImg());			
+			tendencyBooks.add(bookInfo);
+		}
+		
+		return tendencyBooks;
 	}
 }

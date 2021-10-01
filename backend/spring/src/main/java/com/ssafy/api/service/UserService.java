@@ -26,4 +26,7 @@ public interface UserService {
 	// MBTI 수정하기
 	User changeUserMbti(String userId, UserMbtiReq userMbtiReq);
 	
+	// 경향성 평가용 책
+	List getTendencyBooks();
+	
 }

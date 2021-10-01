@@ -23,6 +23,7 @@ import com.ssafy.api.response.UserCreateJobRes;
 import com.ssafy.api.response.UserDuplicatedRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
+import com.ssafy.api.response.UserTendencyRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -43,7 +44,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Api(value = "유저 API", tags = {"User"})
 @RestController
-@RequestMapping("/auth/user")
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired
@@ -174,15 +175,15 @@ public class UserController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> userMbti (
 			@ApiIgnore Authentication authentication,
-			@RequestBody UserMbtiReq userMbti
+			@RequestBody UserMbtiReq uMbti
 			) {
 		
 		// 로그인 검사
 		try {
 			SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 			String userId = userDetails.getUsername();
-			// mbti 추가
-			User user = userService.changeUserMbti(userId, userMbti);
+			// mbti 추
+			User user = userService.changeUserMbti(userId, uMbti);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -193,22 +194,23 @@ public class UserController {
 	}
 	
 	// 유저 tendency 검사를 위한 책 리스트 반환하기
-//	@GetMapping("profile/tendency")
-//	@ApiOperation(value = "유저 tendency 검사를 위한 책 리스트 반환하기", notes ="10권 정도 선택할 수 있도록 한다.")
-//	@ApiResponses({
-//		@ApiResponse(code = 200, message = "반환 성공"),
-//		@ApiResponse(code = 500, message = "서버 오류")
-//	})
-//	public ResponseEntity<UserTendencyRes> userTendencyTest () {
-//		
-//		try {
-//			
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			return null;
-//		}
-//		
-//		return null;
-//	}
+	@GetMapping("profile/tendency")
+	@ApiOperation(value = "유저 tendency 검사를 위한 책 리스트 반환하기", notes ="10권 정도 선택할 수 있도록 한다.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "반환 성공"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<UserTendencyRes> userTendencyTest () {
+		
+		try {
+			List ten10Books = userService.getTendencyBooks();
+			return ResponseEntity.status(200).body(UserTendencyRes.of(ten10Books));
+		} catch (Exception e) {
+			// TODO: handle exception
+//			System.out.println(e);
+			List<Object> erRes = new ArrayList<Object>();
+			return ResponseEntity.status(400).body(UserTendencyRes.of(erRes));
+		}
+	}
 	
 }
