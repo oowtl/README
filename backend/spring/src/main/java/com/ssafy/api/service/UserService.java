@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserMbtiReq;
+import com.ssafy.api.request.UserModifyTendencyPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
 
@@ -28,5 +29,8 @@ public interface UserService {
 	
 	// 경향성 평가용 책
 	List getTendencyBooks();
+	
+	// 경향성 평가 다시하기
+	List<Object> setTendencyBooks(User user, UserModifyTendencyPostReq userModifyTendencyInfo);
 	
 }

@@ -12,13 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserTendencyRes")
-public class UserTendencyRes {
+public class UserGetTendencyRes {
 	@ApiModelProperty(name = "contents", example = "{id: 1, title: ..., author, ...}")
 	List<Object> contents;
 	
 	
-	public static UserTendencyRes of(List<Object> contents) {
-		UserTendencyRes	res = new UserTendencyRes();
+	public static UserGetTendencyRes of(List<Object> contents) {
+		UserGetTendencyRes	res = new UserGetTendencyRes();
 		res.setContents(contents);
 		return res;
 	}

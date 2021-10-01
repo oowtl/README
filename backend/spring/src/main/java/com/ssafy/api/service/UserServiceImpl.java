@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserMbtiReq;
+import com.ssafy.api.request.UserModifyTendencyPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Book_author;
@@ -94,11 +97,12 @@ public class UserServiceImpl implements UserService {
 		
 		List<HashMap<String, Integer>> tenList = userRegisterInfo.getTendency(); 
 		for (int i = 0; i < tenList.size(); i++) {
+			
+			// 좋아요
 			if (tenList.get(i).get("check") == 0) {
 				
 				Book chBook = bookRepository.findOneById(tenList.get(i).get("id").longValue()).get();
 				
-				// 좋아요
 				Book_like blike = new Book_like();
 				blike.setBook(chBook);
 				blike.setUser(createUser);
@@ -200,5 +204,31 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return tendencyBooks;
+	}
+	
+	@Override
+	public List<Object> setTendencyBooks(User user, UserModifyTendencyPostReq userModifyTendencyInfo) {
+		// TODO Auto-generated method stub
+		List<Object> res = new ArrayList<Object>();
+		
+		List<Book_tendency> beforeUserTendencyList = bookTendencyRepository.findAllByUser(user);
+		
+		for (int i = 0; i < beforeUserTendencyList.size(); i++) {
+			bookTendencyRepository.delete(beforeUserTendencyList.get(i));
+		}
+		
+		List<HashMap<String, Integer>> afterUserTendencyList = userModifyTendencyInfo.getBookIds();
+		
+		for (int i = 0; i < afterUserTendencyList.size(); i++) {
+			
+			if (afterUserTendencyList.get(i).get("check") == 0) {
+				Book_tendency bookTendency = new Book_tendency();
+				bookTendency.setBook(bookRepository.findById(afterUserTendencyList.get(i).get("id").longValue()).get());
+				bookTendency.setUser(user);
+				Book_tendency saveTendency = bookTendencyRepository.save(bookTendency);
+				res.add(saveTendency);
+			}
+		}
+		return res;
 	}
 }
