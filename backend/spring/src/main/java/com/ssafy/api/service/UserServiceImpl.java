@@ -109,7 +109,6 @@ public class UserServiceImpl implements UserService {
 				bten.setBook(chBook);
 				bten.setUser(createUser);
 				bookTendencyRepository.save(bten);
-				
 			}
 		}
 		// jpaRepository의 save가 데이터가 새로 추가되면 insert를 실행
