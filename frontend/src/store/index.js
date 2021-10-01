@@ -101,7 +101,7 @@ export default new Vuex.Store({
       };
       if (req.val !== 'password' && req.condition) {
         http
-          .get('/auth/user/valDuplicated/' + req.val + '/' + req.content)
+          .get('/users/valDuplicated/' + req.val + '/' + req.content)
           .then(({ data }) => {
             result.duplicate = data.result;
             commit("SIGNUP_CHECK", result);
