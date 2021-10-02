@@ -2,10 +2,10 @@
     <div>
         <div>
             <figure class="snip1273">
-                <img :src="book.img" width="300px" height="450px"/>
+                <img :src="bookInfo.img" width="300px" height="450px"/>
                 <figcaption>
-                    <h3>{{book.title}}</h3>
-                    <p>{{book.story}}</p>
+                    <h3>{{bookInfo.title}}</h3>
+                    <p>{{bookInfo.story}}</p>
                     
                 </figcaption>
                 <a href="#"></a>
@@ -43,25 +43,26 @@
 import { mapGetters } from 'vuex';
 export default {
     created(){
-        this.book = this.getBookPropensity[0]
+        this.bookInfo = this.getBookPropensity[0]
     },
     data() {
         return {
             responsive: false,
             index : 0,
-            book : {}
+            bookInfo : {},
+            bookPropensity : []
         };
     },
     methods: {
         getBookInfo(flag){
-            if(this.index < 3){
+            if(this.index < 2){
                 console.log(flag);
+                this.bookPropensity.push({"id" : this.bookInfo.id, "check" : flag});
                 this.index += 1;
-                this.book = this.getBookPropensity[this.index];
-                console.log(this.index);
-                console.log(this.book);
+                this.bookInfo = this.getBookPropensity[this.index];
+                console.log(this.bookPropensity);
             }else{
-                alert("끝");
+                this.$store.dispatch('');
             }
         }
     },
@@ -70,7 +71,7 @@ export default {
     },
     watch : {
         index : function(){
-            this.book = this.getBookPropensity[this.index];
+            this.bookInfo = this.getBookPropensity[this.index];
         }
     }
 }

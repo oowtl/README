@@ -45,7 +45,8 @@ export default new Vuex.Store({
       password: String,
       propensity: [
         "I", "S", "T", "J"
-      ]
+      ],
+      
     },
     bookPropensity: [
       {"title": "달러구트 꿈 백화점. 2 단골손님을 찾습니다 | 이미예 장편소설", "author": "이미예", "publisher": "팩토리나인", "genre": ["소설", "판타지소설", "장르소설", "한국소설"], "topic": ["공감", "위로", "판타지", "민원", "한국소설", "판타지소설", "힐링", "페니"], "price": "13,800", "story": "100만 독자를 사로잡은 《달러구트 꿈 백화점》, 그 두 번째 이야기어느덧 페니가 달러구트 꿈 백화점에서 일한 지도 1년이 넘었다.재고가 부족한 꿈을 관리하고, 꿈값 창고에서 감정으로 가득 찬 병을 옮기고, 프런트의 수많은 눈꺼풀 저울을 관리하는 일에 능숙해진 페니는 자신감이 넘친다. 게다가 꿈 산업 종사자로 인정을 받아야만 드나들 수 있는 ‘컴퍼니 구역’에도 가게 된 페니는 기쁜 마음을 감출 수 없다.하지만 그곳에서 페니를 기다리고 있는 건, 꿈에 대한 불만을 털어놓는 사람들로 가득한 ‘민원관리국’이었다. 설상가상 달러구트는 아주 심각한 민원 하나를 통째로 페니에게 맡기는데…“왜 저에게서 꿈까지 뺏어가려고 하시나요?”라는 알쏭달쏭한 민원을 남기고 발길을 끊어버린 792번 단골손님.페니는 과연 달러구트 꿈 백화점의 오랜 단골손님을 되찾을 수 있을까?", "img": "http://image.kyobobook.co.kr/images/book/large/729/l9791165343729.jpg", "id": 1},
@@ -68,6 +69,9 @@ export default new Vuex.Store({
     getBookPropensity(state) {
       return state.bookPropensity;
     }
+    // getSignupForm(state) {
+    //   return state.signUpForm;
+    // }
   },
   mutations: {
     // 회원가입 검사
@@ -90,25 +94,25 @@ export default new Vuex.Store({
     // 회원가입시 ID, Nickname, Password 검사
     signupCheck({ commit }, req) {
       var result = {
-        type: req.val,
-        condition: req.condition,
-        duplicate: false,
-        content : req.content
+        'type': req.val,
+        'condition': req.condition,
+        'duplicate': false,
+        'content' : req.content
       };
       if (req.val !== 'password' && req.condition) {
-        delete req['condition']
         http
-          .get('/auth/user/valDuplicated', req)
-          .then(({ res }) => {
-              result["duplicate"] = res.result;
+          .get('/users/valDuplicated/' + req.val + '/' + req.content)
+          .then(({ data }) => {
+            result.duplicate = data.result;
+            commit("SIGNUP_CHECK", result);
           })
           .catch(() => {
             console.log("500에러");
           })
       } else if (req.val === 'password') {
         result.duplicate = true;
+        commit("SIGNUP_CHECK", result);
       }
-      commit("SIGNUP_CHECK", result);
     },
     // 비밀번호 확인 검사
     passwordCheck({ commit }, flag) {
@@ -118,5 +122,9 @@ export default new Vuex.Store({
     setPropensity({ commit }, propensity) {
       commit("SETPROPENSITY", propensity)
     }
+    // setBookPropensity({ commit }, bookPropensity) {
+    //   http
+    //     .post('/auth/users/create', this.get)
+    // }
   }
 });

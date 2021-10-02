@@ -20,7 +20,5 @@ public class UserDuplicatedRes extends BaseResponseBody {
 		UserDuplicatedRes r = new UserDuplicatedRes();
 		r.setResult(res);
 		return r;
-	}
-	
-	
+	}	
 }
