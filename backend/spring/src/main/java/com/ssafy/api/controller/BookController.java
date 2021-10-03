@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.BookReviewPostReq;
+import com.ssafy.api.response.BookDetailRes;
 import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Book_like;
 import com.ssafy.db.entity.Book_review;
 import com.ssafy.db.entity.User;
@@ -39,6 +42,26 @@ public class BookController {
 	
 	@Autowired
 	BookService bookService;
+	
+	@GetMapping("/detail/{bookId}")
+	@ApiOperation(value = "도서 상세정보", notes = "도서 상세 정보를 반환한다.")	
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "성공"),
+		@ApiResponse(code = 500, message = "서버 오류"),
+	})
+	public ResponseEntity<BookDetailRes> getBookdetail (
+			@PathVariable("bookId") Long bookId ) {
+		
+		Book book = bookService.getBookDetail(bookId);
+		List reviews = bookService.getBookReviewList(book);
+		
+		
+		System.out.println(book.toString());
+		System.out.println(reviews);
+		
+		return null;
+	}
+	
 	
 	@PostMapping("/review/{bookId}")
 	@ApiOperation(value = "도서 리뷰 작성하기", notes = "리뷰 점수와 리뷰 내용을 작성한다.")

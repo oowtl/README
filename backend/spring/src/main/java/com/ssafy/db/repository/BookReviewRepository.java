@@ -17,6 +17,6 @@ import java.util.Optional;
 @Repository
 public interface BookReviewRepository extends JpaRepository<Book_review, Long> {
 	
-	
+	List<Book_review> findAllByBook(Book book);
     
 }

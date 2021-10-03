@@ -82,6 +82,16 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	
+	@Override
+	public Book getBookDetail(Long bookId) {
+		// TODO Auto-generated method stub
+		
+		Book book = bookRepository.findById(bookId).get();
+		return book;
+	}
+	
+	
 	@Override
 	public Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo) {
 		// TODO Auto-generated method stub
@@ -94,6 +104,14 @@ public class BookServiceImpl implements BookService {
 		review.setUser(user);
 		
 		return bookReviewRepository.save(review);
+	}
+	
+	@Override
+	public List<Book_review> getBookReviewList(Book book) {
+		// TODO Auto-generated method stub
+		List<Book_review> ReviewList = bookReviewRepository.findAllByBook(book);
+		
+		return ReviewList;
 	}
 	
 	@Override
@@ -129,5 +147,15 @@ public class BookServiceImpl implements BookService {
 		bookLikeRepository.delete(likeList.get(0));
 		
 		return true;
+	}
+	
+	@Override
+	public List<Book_like> getBookLikeList(Book book) {
+		// TODO Auto-generated method stub
+		
+		List<Book_like> likeList = bookLikeRepository.findAllByBook(book);
+		
+		
+		return null;
 	}
 }
