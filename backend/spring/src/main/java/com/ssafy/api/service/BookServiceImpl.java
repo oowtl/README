@@ -107,13 +107,37 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	@Override
-	public List<Book_review> getBookReviewList(Book book) {
+	public List<HashMap<String, Object>> getBookReviewList(Book book) {
 		// TODO Auto-generated method stub
-		List<Book_review> ReviewList = bookReviewRepository.findAllByBook(book);
+		List<Book_review> reviewList = bookReviewRepository.findAllByBook(book);
 		
-		return ReviewList;
+		List<HashMap<String, Object>> changeReview = new ArrayList<HashMap<String, Object>>();
+		
+		if (reviewList.isEmpty()) {
+			return changeReview;
+		} else {			
+			reviewList.forEach((review) -> {
+				HashMap<String, Object> reviewInfo = new HashMap<String, Object>();
+				reviewInfo.put("id", review.getId());
+				reviewInfo.put("userId", review.getUser().getUserId());
+				reviewInfo.put("score", review.getPoint());
+				reviewInfo.put("content", review.getContent());
+				
+				changeReview.add(reviewInfo);
+			});
+			return changeReview;
+		}
+		
 	}
 	
+	@Override
+	public Integer getReviewCnt(Book book) {
+		// TODO Auto-generated method stub
+		
+		return bookReviewRepository.findAllByBook(book).size();
+	}
+	
+	 
 	@Override
 	public List<Book_like> getUserLike(User user, Long bookId) {
 		// TODO Auto-generated method stub
@@ -150,11 +174,28 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	@Override
-	public List<Book_like> getBookLikeList(Book book) {
+	public List<HashMap<String, Object>> getBookLikeList(Book book) {
 		// TODO Auto-generated method stub
 		
 		List<Book_like> likeList = bookLikeRepository.findAllByBook(book);
 		
-		return likeList;
+		List<HashMap<String, Object>> changeLike = new ArrayList<HashMap<String, Object>>();
+		
+		if (likeList.isEmpty()) {
+			return changeLike;
+		} else {
+			likeList.forEach((like) -> {
+				HashMap<String, Object> likeInfo = new HashMap<String, Object>();
+				likeInfo.put("id", like.getId());
+				likeInfo.put("userId", like.getUser().getUserId());
+				changeLike.add(likeInfo);
+			});
+			return changeLike;
+		}
+	}
+	@Override
+	public Integer getLikeCnt(Book book) {
+		// TODO Auto-generated method stub
+		return bookReviewRepository.findAllByBook(book).size();
 	}
 }

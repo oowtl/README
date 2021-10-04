@@ -20,4 +20,6 @@ public interface BookLikeRepository extends JpaRepository<Book_like, Long> {
 	List<Book_like> findAllByUserAndBook(User user, Book book);
 	
     List<Book_like> findAllByBook(Book book);
+   
+    Long findCountByBook(Book book);
 }

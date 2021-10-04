@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +54,23 @@ public class BookController {
 	public ResponseEntity<BookDetailRes> getBookdetail (
 			@PathVariable("bookId") Long bookId ) {
 		
-		Book book = bookService.getBookDetail(bookId);
-		List<Book_review> reviews = bookService.getBookReviewList(book);
-		List<Book_like> likes = bookService.getBookLikeList(book);		
-		
-		return null;
+		try {
+			Book book = bookService.getBookDetail(bookId);
+			List<HashMap<String, Object>> reviews = bookService.getBookReviewList(book);
+			List<HashMap<String, Object>> likes = bookService.getBookLikeList(book);		
+			Integer ReCnt  = bookService.getReviewCnt(book);
+			Integer LikeCnt = bookService.getLikeCnt(book);
+			
+			
+			return ResponseEntity.status(200).body(BookDetailRes.of(book, reviews, likes, ReCnt, LikeCnt));
+		} catch (Exception e) {
+			// TODO: handle exception
+			Book book = new Book();
+			List<HashMap<String, Object>> reviews = new ArrayList<HashMap<String, Object>>();
+			List<HashMap<String, Object>> likes = new ArrayList<HashMap<String, Object>>();
+			return ResponseEntity.status(500).body(BookDetailRes.of(book, reviews, likes, 0, 0));
+		}
+	
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.ssafy.api.request.BookReviewPostReq;
@@ -24,7 +25,9 @@ public interface BookService {
 	// 리뷰
 	Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo);
 	// 도서 별 리뷰 조회
-	List<Book_review> getBookReviewList (Book book);
+	List<HashMap<String, Object>> getBookReviewList (Book book);
+	// 도서 상세정보 리뷰 카운트
+	Integer getReviewCnt (Book book);
 	
 	
 	// 좋아요
@@ -32,5 +35,7 @@ public interface BookService {
 	Book_like saveLike(User user, Long bookId);
 	Boolean deleteLike(User user, Long bookId);
 	// 좋아요 조회
-	List<Book_like> getBookLikeList (Book book);
+	List<HashMap<String, Object>> getBookLikeList (Book book);
+	// 좋아요 리뷰 카운트
+	Integer getLikeCnt (Book book);
 }
