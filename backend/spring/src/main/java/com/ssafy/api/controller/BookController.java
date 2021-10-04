@@ -53,11 +53,8 @@ public class BookController {
 			@PathVariable("bookId") Long bookId ) {
 		
 		Book book = bookService.getBookDetail(bookId);
-		List reviews = bookService.getBookReviewList(book);
-		
-		
-		System.out.println(book.toString());
-		System.out.println(reviews);
+		List<Book_review> reviews = bookService.getBookReviewList(book);
+		List<Book_like> likes = bookService.getBookLikeList(book);		
 		
 		return null;
 	}

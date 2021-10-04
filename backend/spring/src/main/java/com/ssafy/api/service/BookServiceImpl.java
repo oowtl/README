@@ -155,7 +155,6 @@ public class BookServiceImpl implements BookService {
 		
 		List<Book_like> likeList = bookLikeRepository.findAllByBook(book);
 		
-		
-		return null;
+		return likeList;
 	}
 }

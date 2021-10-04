@@ -17,8 +17,9 @@ import com.ssafy.db.entity.User;
  */
 public interface BookService {
 	
-	// 도서 정보 반환
+	// 도서 정보 반
 	Book getBookDetail(Long bookId);
+	// 상세정보로 만들어 주기
 	
 	// 리뷰
 	Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo);
