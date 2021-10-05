@@ -3,7 +3,9 @@ package com.ssafy.api.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
+import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,15 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.BookListGetReq;
 import com.ssafy.api.request.BookReviewPostReq;
 import com.ssafy.api.response.BookDetailRes;
+import com.ssafy.api.response.BookListRes;
 import com.ssafy.api.service.BookService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Book;
+import com.ssafy.db.entity.Book_genre;
+import com.ssafy.db.entity.Book_keyword;
 import com.ssafy.db.entity.Book_like;
 import com.ssafy.db.entity.Book_review;
+import com.ssafy.db.entity.Table_genre;
+import com.ssafy.db.entity.Table_keyword;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookLikeRepository;
 
@@ -71,6 +79,61 @@ public class BookController {
 			return ResponseEntity.status(500).body(BookDetailRes.of(book, reviews, likes, 0, 0));
 		}
 	
+	}
+	
+	
+	@GetMapping("/list/genre")
+	@ApiOperation(value = "장르별 도서 리스트 반환", notes = "도서목록 20개")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "성공"),
+		@ApiResponse(code = 500, message = "실패")
+	})
+	public ResponseEntity <BookListRes> getBooksGenre (
+			@RequestBody @ApiParam(value = "도서 리스트 정보 요청", required = true) BookListGetReq bookListInfo) {
+		
+		try {
+			// genre 찾기
+			Optional<Table_genre> genre = bookService.getGenre(bookListInfo.getType());
+			genre.orElseThrow(() -> new Exception());
+			
+			// genre 관련한 것 찾아내기
+			List<Book_genre> genreBookList = bookService.findGenreBook(genre.get());
+			
+			// Book List 받기 리뷰, 좋아요 카운트 포함
+			List<HashMap<String, Object>> bookList = bookService.getGenBookList(genreBookList);
+			
+			return ResponseEntity.status(200).body(BookListRes.of(genre.get().getGenre(), bookList));
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(500).body(BookListRes.of("", new ArrayList<HashMap<String, Object>>()));
+		}
+	}
+	
+	@GetMapping("/list/topic")
+	@ApiOperation(value = "주제어별 도서 리스트 반환")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "성공"),
+		@ApiResponse(code = 500, message = "서버 에러")
+	})
+	public ResponseEntity<BookListRes> getBooksTopic(
+			@RequestBody @ApiParam(value = "도서 리스트 종류", required = true) BookListGetReq bookListInfo) {
+		
+		try {
+			Optional<Table_keyword> keyword = bookService.getKeyword(bookListInfo.getType());
+			keyword.orElseThrow(() -> new Exception());
+			
+			// topic 에 관련된 book_keyword
+			List<Book_keyword> keywordBookList = bookService.findKeywordBook(keyword.get()); // 이미 존재
+			
+			// Book List 받기, 리뷰 좋아요 카운트 포함
+			List<HashMap<String, Object>> bookList = bookService.getKeywordBookList(keywordBookList);
+			
+			return ResponseEntity.status(200).body(BookListRes.of(keyword.get().getContent(), bookList));
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(500).body(BookListRes.of("", new ArrayList<HashMap<String, Object>>()));
+		}
 	}
 	
 	
@@ -131,4 +194,6 @@ public class BookController {
 			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Failure"));
 		}
 	}
+	
+	
 }

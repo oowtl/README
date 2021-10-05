@@ -3,14 +3,19 @@ package com.ssafy.api.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import com.ssafy.api.request.BookReviewPostReq;
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserMbtiReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.Book;
+import com.ssafy.db.entity.Book_genre;
+import com.ssafy.db.entity.Book_keyword;
 import com.ssafy.db.entity.Book_like;
 import com.ssafy.db.entity.Book_review;
+import com.ssafy.db.entity.Table_genre;
+import com.ssafy.db.entity.Table_keyword;
 import com.ssafy.db.entity.User;
 
 /**
@@ -18,9 +23,22 @@ import com.ssafy.db.entity.User;
  */
 public interface BookService {
 	
-	// 도서 정보 반
+	// 도서 정보 반환 ( 상세정보로 만들어 주기 )
 	Book getBookDetail(Long bookId);
-	// 상세정보로 만들어 주기
+	
+	// 도서 목록
+	// 장르
+	Optional<Table_genre> getGenre (String genre);
+	// 장르에 해당하는 도서 목록 반환
+	List<Book_genre> findGenreBook (Table_genre genre);
+	// 장르별 도서정보 목록 반환
+	List<HashMap<String, Object>> getGenBookList(List<Book_genre> genBook);
+	// 주제어
+	Optional<Table_keyword> getKeyword (String keyword);
+	// 주제어에 해당하는 book_keyword 반환
+	List<Book_keyword> findKeywordBook(Table_keyword keyword);
+	// 주제어별 도서정보 목록 반환
+	List<HashMap<String, Object>> getKeywordBookList(List<Book_keyword> keyBook);
 	
 	// 리뷰
 	Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo);
@@ -28,7 +46,6 @@ public interface BookService {
 	List<HashMap<String, Object>> getBookReviewList (Book book);
 	// 도서 상세정보 리뷰 카운트
 	Integer getReviewCnt (Book book);
-	
 	
 	// 좋아요
 	List<Book_like> getUserLike(User user, Long bookId);

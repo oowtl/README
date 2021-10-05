@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Book_author;
 import com.ssafy.db.entity.Book_genre;
+import com.ssafy.db.entity.Book_keyword;
 import com.ssafy.db.entity.Book_like;
 import com.ssafy.db.entity.Book_review;
 import com.ssafy.db.entity.Book_tendency;
@@ -24,9 +26,11 @@ import com.ssafy.db.entity.Common;
 import com.ssafy.db.entity.Common_detail;
 import com.ssafy.db.entity.Table_author;
 import com.ssafy.db.entity.Table_genre;
+import com.ssafy.db.entity.Table_keyword;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookAuthorRepository;
 import com.ssafy.db.repository.BookGenreRepository;
+import com.ssafy.db.repository.BookKeywordRepository;
 import com.ssafy.db.repository.BookLikeRepository;
 import com.ssafy.db.repository.BookRepository;
 import com.ssafy.db.repository.BookReviewRepository;
@@ -35,6 +39,7 @@ import com.ssafy.db.repository.CommonDetailRepository;
 import com.ssafy.db.repository.CommonRepository;
 import com.ssafy.db.repository.TableAuthorRepository;
 import com.ssafy.db.repository.TableGenreRepository;
+import com.ssafy.db.repository.TableKeywordRepository;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
@@ -56,6 +61,9 @@ public class BookServiceImpl implements BookService {
 	BookAuthorRepository bookAuthorRepository;
 	
 	@Autowired
+	BookKeywordRepository bookKeywordRepository;
+	
+	@Autowired
 	BookLikeRepository bookLikeRepository;
 	
 	@Autowired
@@ -69,6 +77,9 @@ public class BookServiceImpl implements BookService {
 	
 	@Autowired
 	TableAuthorRepository tableAuthorRepository;
+	
+	@Autowired
+	TableKeywordRepository tableKeywordRepository;
 	
 	@Autowired
 	CommonRepository commonRepository;
@@ -91,6 +102,126 @@ public class BookServiceImpl implements BookService {
 		return book;
 	}
 	
+	@Override
+	public Optional<Table_genre> getGenre(String genre) {
+		// TODO Auto-generated method stub
+
+		return tableGenreRepository.findByGenre(genre);
+	}
+	
+	@Override
+	public List<Book_genre> findGenreBook(Table_genre genre) {
+		// TODO Auto-generated method stub
+		
+		return bookGenreRepository.findFirst20ByGenre(genre);
+	}
+		
+	@Override
+	public List<HashMap<String, Object>> getGenBookList(List<Book_genre> genBook) {
+		// TODO Auto-generated method stub
+		
+		List<HashMap<String, Object>> bookList = new ArrayList<HashMap<String,Object>>();
+		
+		genBook.forEach((gb) -> {
+			Book book = bookRepository.findOneById(gb.getBook().getId()).get(); // 이미 존재하는 것
+			
+			HashMap<String, Object> bookInfo = new HashMap<String, Object>();
+			bookInfo.put("id", book.getId());
+			bookInfo.put("title", book.getTitle());
+			bookInfo.put("publisher", book.getPublisher());
+			bookInfo.put("story", book.getStory());
+			bookInfo.put("img", book.getImg());
+			bookInfo.put("price", book.getPrice());
+			
+			Book_author bAuthor = bookAuthorRepository.findOneByBook(book); // Book_author
+			Table_author tAuthor = tableAuthorRepository.findOneById(bAuthor.getAuthor_aid().getId()); // Table_author
+			bookInfo.put("author", tAuthor.getAuthor());
+			
+			List<Book_genre> bookGenList = bookGenreRepository.findAllByBook(book);
+			List<String> genList = new ArrayList<String>();
+			bookGenList.forEach((gen) -> {
+				genList.add(gen.getGenre().getGenre());
+			});			
+			bookInfo.put("genre", genList);
+			
+			List<Book_keyword> bookKeyList = bookKeywordRepository.findAllByBook(book);
+			List<String> keyList = new ArrayList<String>();
+			bookKeyList.forEach((bkey) -> {
+				keyList.add(bkey.getKeyword().getContent());
+			});
+			bookInfo.put("topic", keyList);
+			
+			List<Book_review> reviewList = bookReviewRepository.findAllByBook(book);
+			bookInfo.put("review_cnt", reviewList.size());
+			
+			List<Book_like> likeList = bookLikeRepository.findAllByBook(book);
+			bookInfo.put("like_cnt", likeList.size());
+			
+			bookList.add(bookInfo);
+		});
+		
+		return bookList;
+	}
+	
+	@Override
+	public List<Book_keyword> findKeywordBook(Table_keyword keyword) {
+		// TODO Auto-generated method stub
+		return bookKeywordRepository.findFirst20ByKeyword(keyword);
+	}
+	
+	@Override
+	public Optional<Table_keyword> getKeyword(String keyword) {
+		// TODO Auto-generated method stub
+		
+		return tableKeywordRepository.findByContent(keyword);
+	}
+	
+	@Override
+	public List<HashMap<String, Object>> getKeywordBookList(List<Book_keyword> keyBook) {
+		// TODO Auto-generated method stub
+		
+		List<HashMap<String, Object>> bookList = new ArrayList<HashMap<String,Object>>();
+		
+		keyBook.forEach((key) -> {
+			Book book = bookRepository.findById(key.getBook().getId()).get();
+			
+			HashMap<String, Object> bookInfo = new HashMap<String, Object>();
+			bookInfo.put("id", book.getId());
+			bookInfo.put("title", book.getTitle());
+			bookInfo.put("publisher", book.getPublisher());
+			bookInfo.put("story", book.getStory());
+			bookInfo.put("img", book.getImg());
+			bookInfo.put("price", book.getPrice());
+			
+			Book_author bAuthor = bookAuthorRepository.findOneByBook(book); // Book_author
+			Table_author tAuthor = tableAuthorRepository.findOneById(bAuthor.getAuthor_aid().getId()); // Table_author
+			bookInfo.put("author", tAuthor.getAuthor());
+			
+			List<Book_genre> bookGenList = bookGenreRepository.findAllByBook(book);
+			List<String> genList = new ArrayList<String>();
+			bookGenList.forEach((gen) -> {
+				genList.add(gen.getGenre().getGenre());
+			});			
+			bookInfo.put("genre", genList);
+			
+			List<Book_keyword> bookKeyList = bookKeywordRepository.findAllByBook(book);
+			List<String> keyList = new ArrayList<String>();
+			bookKeyList.forEach((bkey) -> {
+				keyList.add(bkey.getKeyword().getContent());
+			});
+			bookInfo.put("topic", keyList);
+			
+			List<Book_review> reviewList = bookReviewRepository.findAllByBook(book);
+			bookInfo.put("review_cnt", reviewList.size());
+			
+			List<Book_like> likeList = bookLikeRepository.findAllByBook(book);
+			bookInfo.put("like_cnt", likeList.size());
+			
+			bookList.add(bookInfo);
+		});
+		
+		return bookList;
+	}
 	
 	@Override
 	public Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo) {
