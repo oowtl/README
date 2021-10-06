@@ -1,0 +1,281 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema ssafy_pjt
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema ssafy_pjt
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ssafy_pjt` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `ssafy_pjt` ;
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(255) NULL DEFAULT NULL,
+  `publisher` VARCHAR(255) NULL DEFAULT NULL,
+  `story` VARCHAR(10000) NULL DEFAULT NULL,
+  `price` INT NULL DEFAULT NULL,
+  `img` VARCHAR(255) NULL DEFAULT NULL,
+  `pday` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 16305
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`table_author`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`table_author` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `author` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4526
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book_author`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book_author` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `book_bid` INT NOT NULL,
+  `author_aid` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_book_author_book1_idx` (`book_bid` ASC) VISIBLE,
+  INDEX `fk_book_author_author1_idx` (`author_aid` ASC) VISIBLE,
+  CONSTRAINT `fk_book_author_author1`
+    FOREIGN KEY (`author_aid`)
+    REFERENCES `ssafy_pjt`.`table_author` (`id`),
+  CONSTRAINT `fk_book_author_book1`
+    FOREIGN KEY (`book_bid`)
+    REFERENCES `ssafy_pjt`.`book` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6673
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`table_genre`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`table_genre` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `genre` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1077
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book_genre`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book_genre` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `book_bid` INT NOT NULL,
+  `genre_gid` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_book_genre_book1_idx` (`book_bid` ASC) VISIBLE,
+  INDEX `fk_book_genre_genre1_idx` (`genre_gid` ASC) VISIBLE,
+  CONSTRAINT `fk_book_genre_book1`
+    FOREIGN KEY (`book_bid`)
+    REFERENCES `ssafy_pjt`.`book` (`id`),
+  CONSTRAINT `fk_book_genre_genre1`
+    FOREIGN KEY (`genre_gid`)
+    REFERENCES `ssafy_pjt`.`table_genre` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 27910
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`table_keyword`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`table_keyword` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `content` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 13415
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book_keyword`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book_keyword` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `book_bid` INT NOT NULL,
+  `keyword_kid` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_book_keyword_book1_idx` (`book_bid` ASC) VISIBLE,
+  INDEX `fk_book_keyword_keyword1_idx` (`keyword_kid` ASC) VISIBLE,
+  CONSTRAINT `fk_book_keyword_book1`
+    FOREIGN KEY (`book_bid`)
+    REFERENCES `ssafy_pjt`.`book` (`id`),
+  CONSTRAINT `fk_book_keyword_keyword1`
+    FOREIGN KEY (`keyword_kid`)
+    REFERENCES `ssafy_pjt`.`table_keyword` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 42331
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `password` VARCHAR(255) NULL DEFAULT NULL,
+  `age` INT NULL DEFAULT NULL,
+  `job` VARCHAR(255) NULL DEFAULT NULL,
+  `sex` VARCHAR(45) NULL DEFAULT NULL,
+  `mbti` VARCHAR(45) NULL DEFAULT NULL,
+  `tendency` VARCHAR(255) NULL DEFAULT NULL,
+  `nickname` VARCHAR(255) NULL DEFAULT NULL,
+  `user_id` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book_like`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book_like` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_uid` INT NOT NULL,
+  `book_bid` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_like_user1_idx` (`user_uid` ASC) VISIBLE,
+  INDEX `fk_like_book1_idx` (`book_bid` ASC) VISIBLE,
+  CONSTRAINT `fk_like_book1`
+    FOREIGN KEY (`book_bid`)
+    REFERENCES `ssafy_pjt`.`book` (`id`),
+  CONSTRAINT `fk_like_user1`
+    FOREIGN KEY (`user_uid`)
+    REFERENCES `ssafy_pjt`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book_review`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book_review` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `book_bid` INT NOT NULL,
+  `user_uid` INT NOT NULL,
+  `point` DOUBLE NULL DEFAULT NULL,
+  `content` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_review_book1_idx` (`book_bid` ASC) VISIBLE,
+  INDEX `fk_review_user1_idx` (`user_uid` ASC) VISIBLE,
+  CONSTRAINT `fk_review_book1`
+    FOREIGN KEY (`book_bid`)
+    REFERENCES `ssafy_pjt`.`book` (`id`),
+  CONSTRAINT `fk_review_user1`
+    FOREIGN KEY (`user_uid`)
+    REFERENCES `ssafy_pjt`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`book_tendency`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`book_tendency` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_uid` INT NOT NULL,
+  `book_bid` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_book_tendency_user_idx` (`user_uid` ASC) VISIBLE,
+  INDEX `fk_book_tendency_book1_idx` (`book_bid` ASC) VISIBLE,
+  CONSTRAINT `fk_book_tendency_book1`
+    FOREIGN KEY (`book_bid`)
+    REFERENCES `ssafy_pjt`.`book` (`id`),
+  CONSTRAINT `fk_book_tendency_user`
+    FOREIGN KEY (`user_uid`)
+    REFERENCES `ssafy_pjt`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`common`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`common` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`common_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`common_detail` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `com_id` INT NOT NULL,
+  `common_detail` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_common_detail_common1_idx` (`com_id` ASC) VISIBLE,
+  CONSTRAINT `FKg6gniydix2ojwbclfcjpmx0jh`
+    FOREIGN KEY (`com_id`)
+    REFERENCES `ssafy_pjt`.`common` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `ssafy_pjt`.`user_tendency`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafy_pjt`.`user_tendency` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_uid` INT NOT NULL,
+  `user_genre` VARCHAR(255) NULL DEFAULT NULL,
+  `user_author` VARCHAR(255) NULL DEFAULT NULL,
+  `user_publisher` VARCHAR(255) NULL DEFAULT NULL,
+  `user_keyword` VARCHAR(255) NULL DEFAULT NULL,
+  `user_tendencycol` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_user_tendency_user1_idx` (`user_uid` ASC) VISIBLE,
+  CONSTRAINT `fk_user_tendency_user1`
+    FOREIGN KEY (`user_uid`)
+    REFERENCES `ssafy_pjt`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

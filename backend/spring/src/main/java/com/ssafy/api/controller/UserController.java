@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserMbtiReq;
+import com.ssafy.api.request.UserModifyTendencyPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.response.UserCreateJobRes;
 import com.ssafy.api.response.UserDuplicatedRes;
+import com.ssafy.api.response.UserGetTendencyRes;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
-import com.ssafy.api.response.UserTendencyRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -64,12 +65,18 @@ public class UserController {
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		
 		if(userService.getUserByUserId(registerInfo.getUserId())==null) {
-			System.out.println("중복되는 아이디가 없습니다. SUCCESS!");
-			User user = userService.createUser(registerInfo);
-			return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
+//			System.out.println("중복되는 아이디가 없습니다. SUCCESS!");
+			try {
+				User user = userService.createUser(registerInfo);
+				return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
+			} catch (Exception e) {
+				// TODO: handle exception
+				return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Failure"));
+			}
+			
 		} else {
-			System.out.println("중복되는 아이디가 있습니다. FAIL!");
-			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Failure"));
+//			System.out.println("중복되는 아이디가 있습니다. FAIL!");
+			return ResponseEntity.status(500).body(BaseResponseBody.of(400, "Failure"));
 		}
 	}
 	
@@ -103,9 +110,7 @@ public class UserController {
 	public ResponseEntity<UserDuplicatedRes> duplicateUser (
 			@PathVariable("val") String val,
 			@PathVariable("content") String content) {
-		
-		System.out.println(val + content);
-		
+
 		// 1차 검사 val 이 잘 들어왔는가?
 		try {		
 			Exception er = new Exception();
@@ -200,17 +205,46 @@ public class UserController {
 		@ApiResponse(code = 200, message = "반환 성공"),
 		@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<UserTendencyRes> userTendencyTest () {
+	public ResponseEntity<UserGetTendencyRes> userTendencyTest () {
 		
 		try {
 			List ten10Books = userService.getTendencyBooks();
-			return ResponseEntity.status(200).body(UserTendencyRes.of(ten10Books));
+			return ResponseEntity.status(200).body(UserGetTendencyRes.of(ten10Books));
 		} catch (Exception e) {
 			// TODO: handle exception
 //			System.out.println(e);
 			List<Object> erRes = new ArrayList<Object>();
-			return ResponseEntity.status(400).body(UserTendencyRes.of(erRes));
+			return ResponseEntity.status(400).body(UserGetTendencyRes.of(erRes));
 		}
 	}
+	
+	// 유저 tendency 재검사 요청
+	@PostMapping("profile/tendency")
+	@ApiOperation(value = "유저 tendency 검사 재 수정", notes = "수정합니다.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "수정 성공"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> modifyTendency(
+			@ApiIgnore Authentication authentication,
+			@RequestBody @ApiParam(value = "유저 경향성 평가", required = true) UserModifyTendencyPostReq userModifyTendencyInfo) {
+		
+		try {
+			SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+			String userId = userDetails.getUsername();
+
+			User user = userService.getUserByUserId(userId);
+			
+			List<Object> tenList = userService.setTendencyBooks(user, userModifyTendencyInfo);
+
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Failure"));
+		}
+	}
+	
+	
 	
 }

@@ -56,18 +56,22 @@ export default {
     methods: {
         getBookInfo(flag){
             if(this.index < 2){
-                console.log(flag);
                 this.bookPropensity.push({"id" : this.bookInfo.id, "check" : flag});
                 this.index += 1;
                 this.bookInfo = this.getBookPropensity[this.index];
-                console.log(this.bookPropensity);
+                // console.log(this.bookPropensity);
             }else{
-                this.$store.dispatch('');
+                var signUpData = this.getSignupForm;
+                signUpData["tendency"] = this.bookPropensity;
+                var mbti = this.getSignupForm.mbti;
+                signUpData["mbti"] = mbti.join('');
+                // this.$store.dispatch('signUp', this.signUpData);
+                this.$router.push("/login")
             }
         }
     },
     computed : {
-        ...mapGetters(['getBookPropensity']),
+        ...mapGetters(['getBookPropensity', 'getSignupForm']),
     },
     watch : {
         index : function(){

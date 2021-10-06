@@ -6,16 +6,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserDuplicatedReq;
 import com.ssafy.api.request.UserMbtiReq;
+import com.ssafy.api.request.UserModifyTendencyPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Book_author;
 import com.ssafy.db.entity.Book_genre;
+import com.ssafy.db.entity.Book_like;
+import com.ssafy.db.entity.Book_tendency;
 import com.ssafy.db.entity.Common;
 import com.ssafy.db.entity.Common_detail;
 import com.ssafy.db.entity.Table_author;
@@ -23,7 +28,9 @@ import com.ssafy.db.entity.Table_genre;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.BookAuthorRepository;
 import com.ssafy.db.repository.BookGenreRepository;
+import com.ssafy.db.repository.BookLikeRepository;
 import com.ssafy.db.repository.BookRepository;
+import com.ssafy.db.repository.BookTendencyRepository;
 import com.ssafy.db.repository.CommonDetailRepository;
 import com.ssafy.db.repository.CommonRepository;
 import com.ssafy.db.repository.TableAuthorRepository;
@@ -40,16 +47,22 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 	
 	@Autowired
-	TableGenreRepository tableGenreRepository;
+	BookRepository bookRepository;
 	
 	@Autowired
 	BookGenreRepository bookGenreRepository;
 	
 	@Autowired
-	BookRepository bookRepository;
+	BookAuthorRepository bookAuthorRepository;
 	
 	@Autowired
-	BookAuthorRepository bookAuthorRepository;
+	BookLikeRepository bookLikeRepository;
+	
+	@Autowired
+	BookTendencyRepository bookTendencyRepository;
+	
+	@Autowired
+	TableGenreRepository tableGenreRepository;
 	
 	@Autowired
 	TableAuthorRepository tableAuthorRepository;
@@ -78,12 +91,32 @@ public class UserServiceImpl implements UserService {
 		user.setAge(userRegisterInfo.getAge());
 		user.setSex(userRegisterInfo.getSex());
 		user.setMbti(userRegisterInfo.getMbti());
+		
+		User createUser = userRepository.save(user); 
 		// tendency
 		
-		
-		
+		List<HashMap<String, Integer>> tenList = userRegisterInfo.getTendency(); 
+		for (int i = 0; i < tenList.size(); i++) {
+			
+			// 좋아요
+			if (tenList.get(i).get("check") == 0) {
+				
+				Book chBook = bookRepository.findOneById(tenList.get(i).get("id").longValue()).get();
+				
+				Book_like blike = new Book_like();
+				blike.setBook(chBook);
+				blike.setUser(createUser);
+				bookLikeRepository.save(blike);
+				
+				// tendency
+				Book_tendency bten = new Book_tendency();
+				bten.setBook(chBook);
+				bten.setUser(createUser);
+				bookTendencyRepository.save(bten);
+			}
+		}
 		// jpaRepository의 save가 데이터가 새로 추가되면 insert를 실행
-		return userRepository.save(user);
+		return createUser;
 	}
 
 	@Override
@@ -171,5 +204,31 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return tendencyBooks;
+	}
+	
+	@Override
+	public List<Object> setTendencyBooks(User user, UserModifyTendencyPostReq userModifyTendencyInfo) {
+		// TODO Auto-generated method stub
+		List<Object> res = new ArrayList<Object>();
+		
+		List<Book_tendency> beforeUserTendencyList = bookTendencyRepository.findAllByUser(user);
+		
+		for (int i = 0; i < beforeUserTendencyList.size(); i++) {
+			bookTendencyRepository.delete(beforeUserTendencyList.get(i));
+		}
+		
+		List<HashMap<String, Integer>> afterUserTendencyList = userModifyTendencyInfo.getBookIds();
+		
+		for (int i = 0; i < afterUserTendencyList.size(); i++) {
+			
+			if (afterUserTendencyList.get(i).get("check") == 0) {
+				Book_tendency bookTendency = new Book_tendency();
+				bookTendency.setBook(bookRepository.findById(afterUserTendencyList.get(i).get("id").longValue()).get());
+				bookTendency.setUser(user);
+				Book_tendency saveTendency = bookTendencyRepository.save(bookTendency);
+				res.add(saveTendency);
+			}
+		}
+		return res;
 	}
 }

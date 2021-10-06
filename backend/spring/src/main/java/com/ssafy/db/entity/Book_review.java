@@ -20,7 +20,7 @@ public class Book_review extends BaseEntity{
 	@JoinColumn(name = "book_bid")
 	private Book book;
 	
-	private Double point;
+	private Integer point;
 	private String content;
 
 }

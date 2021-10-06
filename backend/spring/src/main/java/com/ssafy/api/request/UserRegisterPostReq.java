@@ -1,5 +1,6 @@
 package com.ssafy.api.request;
 
+import java.util.HashMap;
 import java.util.List;
 
 import io.swagger.annotations.ApiModel;
@@ -27,5 +28,5 @@ public class UserRegisterPostReq {
 	@ApiModelProperty(name="유저 MBTI", example="enfp")
 	String mbti;
 	@ApiModelProperty(name="유저 경향성", example="[{id: 1, check: 0}, {id:2, check: 1}, ...]")
-	List tendency;
+	List<HashMap<String, Integer>> tendency;
 }
