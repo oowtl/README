@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import com.ssafy.db.entity.Book;
 import com.ssafy.db.entity.Book_genre;
 import com.ssafy.db.entity.Table_genre;
 
@@ -17,5 +18,7 @@ import java.util.Optional;
 public interface BookGenreRepository extends JpaRepository<Book_genre, Long> {
 	
     List<Book_genre> findFirst10ByGenre(Table_genre tg);
+    List<Book_genre> findFirst20ByGenre(Table_genre tg);
+    List<Book_genre> findAllByBook(Book book);
     
 }
