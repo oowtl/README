@@ -6,6 +6,7 @@ import Landing from "../views/Landing.vue";
 import Login from "../views/Login.vue";
 import Signup from "../views/Signup.vue";
 import Profile from "../views/Profile.vue";
+import Main from "../views/Main.vue";
 import MainNavbar from "../layout/MainNavbar.vue";
 import MainFooter from "../layout/MainFooter.vue";
 
@@ -15,7 +16,11 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    components: { default: Home, header: MainNavbar, footer: MainFooter },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: "black" }
+    }
   },
   {
     path: "/about",
@@ -64,6 +69,15 @@ const routes = [
     path: "/profile",
     name: "profile",
     components: { default: Profile, header: MainNavbar, footer: MainFooter },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: "black" }
+    }
+  },
+  {
+    path: "/main",
+    name: "main",
+    components: { default: Main},
     props: {
       header: { colorOnScroll: 400 },
       footer: { backgroundColor: "black" }

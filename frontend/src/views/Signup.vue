@@ -11,18 +11,18 @@
                                     <md-button class="md-raised md-simple md-lg " 
                                     :class="[this.getSignupCheck.password.flag && this.getSignupCheck.password.check ? 'md-success' : 'md-danger']" 
                                     @click="firstContinue"
-                                    >Continue1</md-button>
+                                    >Continue</md-button>
                                 </md-step>
                                 
 
                                 <md-step id="second" md-label="성향 검사" :md-done.sync="second" @click="firstContinue">
                                     <propensity-test/>
-                                    <md-button class="md-raised md-simple md-lg md-success" @click="setDone('second', 'third')">Continue12</md-button>
+                                    <md-button class="md-raised md-simple md-lg md-success" @click="setDone('second', 'third')">Continue</md-button>
                                 </md-step>
 
                                 <md-step id="third" md-label="책 성향 검사" :md-done.sync="third">
                                     <book-propensity-test/>
-                                    <md-button class="md-raised md-primary" @click="setDone('third')">CONTINUE123</md-button>
+                                    <!-- <md-button class="md-raised md-primary" @click="setDone('third')">CONTINUE123</md-button> -->
                                 </md-step>
                             </md-steppers>
                         </div>
