@@ -87,9 +87,10 @@ WSGI_APPLICATION = 'DRF.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'testDB',
+        'NAME': 'ssafy_pjt',
         'USER': 'root',
-        'PASSWORD': 'ssafy',
+        # 'PASSWORD': 'ssafy',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
     }

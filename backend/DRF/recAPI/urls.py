@@ -11,5 +11,8 @@ urlpatterns=[
     url(r'^user$', views.UserApi),
     url(r'^user/([0-9]+)$', views.UserApi),
 
-    url(r'^user/saveFile', views.SaveFile)
+    url(r'^user/saveFile', views.SaveFile),
+
+
+    
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

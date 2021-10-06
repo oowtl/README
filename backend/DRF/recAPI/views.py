@@ -73,3 +73,4 @@ def SaveFile(request):
 @csrf_exempt
 def recommend(request):
     if request.method=='GET':
+        return 0
