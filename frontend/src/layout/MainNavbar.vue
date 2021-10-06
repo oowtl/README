@@ -100,7 +100,7 @@
                         data-toggle="dropdown"
                       >
                         <i class="material-icons">view_carousel</i>
-                        <p>Examples</p>
+                        <p>BOOKS</p>
                       </md-button>
                       <ul class="dropdown-menu dropdown-with-icons">
                         <li>
