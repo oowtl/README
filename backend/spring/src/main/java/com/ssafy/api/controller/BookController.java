@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,5 +196,35 @@ public class BookController {
 		}
 	}
 	
+	@GetMapping("/recommend/planb")
+	@ApiOperation(value = "추천 planB", notes = "추천시스템 플랜 B")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "성공"),
+		@ApiResponse(code = 500, message = "실패")
+	})
+	public ResponseEntity<BookListRes> getRecommendSub (
+			@ApiIgnore Authentication authentication) {
+		
+		try {
+			// 검사
+			SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+			String userId = userDetails.getUsername();
+			User user = userService.getUserByUserId(userId);
+			
+			// 좋아요를 한 도서의 장르를 쭉 들고와서 랜덤으로 뽑는다? 각 장르마다 4개씩 5개의 장르			
+			Set<Book> likeBooks = bookService.getUserLikeList(user);
+			if (likeBooks.size() == 0) {
+				throw new Exception("no like");
+			}
+			List<String> genreList = bookService.getBooktoGenre(likeBooks);
+			List<Book> recomBookList = bookService.getRecommendBooks(genreList, likeBooks);
+			List<HashMap<String, Object>> resRecomBookList = bookService.getBookResponse(recomBookList);
+			
+			return ResponseEntity.status(200).body(BookListRes.of("recommend", resRecomBookList));
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(200).body(BookListRes.of("null", new ArrayList<HashMap<String, Object>>()));
+		}
+	}
 	
 }

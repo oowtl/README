@@ -1,11 +1,15 @@
 package com.ssafy.api.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -224,6 +228,71 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	@Override
+	public List<String> getBooktoGenre(Set<Book> bookList) {
+		// TODO Auto-generated method stub
+		
+		Set<String> genreSet = new HashSet<String>();
+		List<String> genreList = new ArrayList<String>();
+		
+		bookList.forEach((book) -> {
+			List<Book_genre> bgList = bookGenreRepository.findAllByBook(book);
+			bgList.forEach((bg) -> {
+				genreSet.add(bg.getGenre().getGenre());
+			});
+		});
+		genreList.addAll(genreSet);
+		
+		return genreList;
+	}
+	
+	@Override
+	public List<HashMap<String, Object>> getBookResponse(List<Book> bookList) {
+		// TODO Auto-generated method stub
+		
+		List<HashMap<String, Object>> resBookList = new ArrayList<HashMap<String,Object>>();
+		
+		bookList.forEach((book) -> {
+			HashMap<String, Object> bookInfo = new HashMap<String, Object>();
+			bookInfo.put("id", book.getId());
+			bookInfo.put("title", book.getTitle());
+			bookInfo.put("publisher", book.getPublisher());
+			bookInfo.put("story", book.getStory());
+			bookInfo.put("img", book.getImg());
+			bookInfo.put("price", book.getPrice());
+			
+			Book_author bAuthor = bookAuthorRepository.findOneByBook(book); // Book_author
+			Table_author tAuthor = tableAuthorRepository.findOneById(bAuthor.getAuthor_aid().getId()); // Table_author
+			bookInfo.put("author", tAuthor.getAuthor());
+			
+			List<Book_genre> bookGenList = bookGenreRepository.findAllByBook(book);
+			List<String> genList = new ArrayList<String>();
+			bookGenList.forEach((gen) -> {
+				genList.add(gen.getGenre().getGenre());
+			});			
+			bookInfo.put("genre", genList);
+			
+			List<Book_keyword> bookKeyList = bookKeywordRepository.findAllByBook(book);
+			List<String> keyList = new ArrayList<String>();
+			bookKeyList.forEach((bkey) -> {
+				keyList.add(bkey.getKeyword().getContent());
+			});
+			bookInfo.put("topic", keyList);
+			
+			List<Book_review> reviewList = bookReviewRepository.findAllByBook(book);
+			bookInfo.put("review_cnt", reviewList.size());
+			
+			List<Book_like> likeList = bookLikeRepository.findAllByBook(book);
+			bookInfo.put("like_cnt", likeList.size());
+			
+			resBookList.add(bookInfo);
+		});
+		
+		return resBookList;
+	}
+	
+	
+	
+	@Override
 	public Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo) {
 		// TODO Auto-generated method stub
 		
@@ -268,6 +337,12 @@ public class BookServiceImpl implements BookService {
 		return bookReviewRepository.findAllByBook(book).size();
 	}
 	
+	@Override
+	public List<Book_review> getUserReviewList(User user) {
+		// TODO Auto-generated method stub
+		
+		return bookReviewRepository.findAllByUser(user);
+	}
 	 
 	@Override
 	public List<Book_like> getUserLike(User user, Long bookId) {
@@ -328,5 +403,116 @@ public class BookServiceImpl implements BookService {
 	public Integer getLikeCnt(Book book) {
 		// TODO Auto-generated method stub
 		return bookReviewRepository.findAllByBook(book).size();
+	}
+	
+	@Override
+	public Set<Book> getUserLikeList(User user) {
+		// TODO Auto-generated method stub
+		
+		List<Book_like> likeList = bookLikeRepository.findAllByUser(user);
+		Set<Book> bookList = new HashSet<Book>();
+		
+		likeList.forEach((like) -> {
+			bookList.add(like.getBook());
+		});
+		
+		return bookList;
+	}
+	
+	// 추천하기
+	@Override
+	public List<Book> getRecommendBooks(List<String> genreList, Set<Book> likeBookList) {
+		// TODO Auto-generated method stub
+		
+		
+		// 1. 장르리스트에 들어온것이 5미만, 5, 5 초과
+		// 2. 랜덤으로 장르 선택
+		// 3. 장르별로 20개 First 로 들고와서 user 좋아요와 비교한다.
+		// 4. 포함되지 않는 것으로 각 장르별 4개씩 들고온다
+		Integer gListsize = genreList.size();
+		if (gListsize > 10) {
+			// 장르 5개 선택
+			Random rd = new Random();
+			Set<String> gSet = new HashSet<String>(); // 장르 5개 선택
+			while (gSet.size() < 5) {
+				gSet.add(genreList.get(rd.nextInt(genreList.size())));
+			}
+			// 장르별 검색 리스트
+			List<Table_genre> tgList = new ArrayList<Table_genre>();
+			gSet.forEach((gs) -> {
+				tgList.add(tableGenreRepository.findByGenre(gs).get());
+			});
+			// 장르별 검색
+			List<Book> recomBook = new ArrayList<Book>();
+			tgList.forEach((tg) -> {
+				List<Book_genre> bgList = bookGenreRepository.findFirst20ByGenre(tg);
+				
+				if (bgList.size() >= 10) {
+					Set<Book> bgSet = new HashSet<Book>();
+					while (bgSet.size() < 5) {
+						Book nBook = bgList.get(rd.nextInt(bgList.size())).getBook();
+						if (!likeBookList.contains(nBook)) {
+							bgSet.add(nBook);
+						}
+					}
+					recomBook.addAll(bgSet);
+				} else {
+					Integer listNum = 0;
+					for (int i = 0; i < bgList.size(); i++) {
+						Book nBook = bgList.get(i).getBook();
+						if (listNum > 5) {
+							break;
+						}
+						if (likeBookList.contains(nBook)) {
+							continue;
+						}
+						recomBook.add(nBook);
+						listNum ++;
+					}					
+				}
+			});
+			return recomBook;
+		} else { // gListsize <= 5
+			
+			// genre 받아와서 쭉 넣어준다.
+			Random rd = new Random();
+			// 몇개를 받아와야할지 정한다.
+			Integer bookQuantity = (25/genreList.size()) + 1;
+			
+			List<Table_genre> tgList = new ArrayList<Table_genre>();
+			genreList.forEach((gl) -> {
+				tgList.add(tableGenreRepository.findByGenre(gl).get());
+			});
+			
+			List<Book> recomBook = new ArrayList<Book>();
+			
+			tgList.forEach((tg) -> {
+				List<Book_genre> bgList = bookGenreRepository.findFirst20ByGenre(tg);
+				if (bgList.size() >= 10) {
+					Set<Book> bgSet = new HashSet<Book>();
+					while (bgSet.size() < bookQuantity) {
+						Book nBook = bgList.get(rd.nextInt(bgList.size())).getBook();
+						if (!likeBookList.contains(nBook)) {
+							bgSet.add(nBook);
+						}
+					}
+					recomBook.addAll(bgSet);
+				} else {
+					Integer listNum = 0;
+					for (int i = 0; i < bgList.size(); i++) {
+						Book nBook = bgList.get(i).getBook();
+						if (listNum > bookQuantity) {
+							break;
+						}
+						if (likeBookList.contains(nBook)) {
+							continue;
+						}
+						recomBook.add(nBook);
+						listNum ++;
+					}					
+				}
+			});
+			return recomBook;
+		}
 	}
 }

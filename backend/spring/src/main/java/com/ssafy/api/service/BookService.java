@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ssafy.api.request.BookReviewPostReq;
 import com.ssafy.api.request.UserDuplicatedReq;
@@ -39,6 +40,10 @@ public interface BookService {
 	List<Book_keyword> findKeywordBook(Table_keyword keyword);
 	// 주제어별 도서정보 목록 반환
 	List<HashMap<String, Object>> getKeywordBookList(List<Book_keyword> keyBook);
+	// 도서 장르 추출(set)
+	List<String> getBooktoGenre(Set<Book> bookList);
+	// Response로 변환하기
+	List<HashMap<String, Object>> getBookResponse(List<Book> bookList);
 	
 	// 리뷰
 	Book_review saveReview(User user, Long bookId, BookReviewPostReq bookReviewInfo);
@@ -46,6 +51,8 @@ public interface BookService {
 	List<HashMap<String, Object>> getBookReviewList (Book book);
 	// 도서 상세정보 리뷰 카운트
 	Integer getReviewCnt (Book book);
+	// 유저 작성 리뷰 조회
+	List<Book_review> getUserReviewList (User user); 
 	
 	// 좋아요
 	List<Book_like> getUserLike(User user, Long bookId);
@@ -55,4 +62,11 @@ public interface BookService {
 	List<HashMap<String, Object>> getBookLikeList (Book book);
 	// 좋아요 리뷰 카운트
 	Integer getLikeCnt (Book book);
+	// 유저 좋아요 조회
+	Set<Book> getUserLikeList(User user);
+	
+	
+	// 추천하기 (Book)
+	List<Book> getRecommendBooks (List<String> genreList, Set<Book> likeBookList);
+
 }
