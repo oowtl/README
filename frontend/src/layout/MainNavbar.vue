@@ -8,8 +8,14 @@
   >
     <div class="md-toolbar-row md-collapse-lateral">
       <div class="md-toolbar-section-start">
-        <h3 class="md-title">ReadME</h3>
-        <a href="/signup"></a>
+        
+        <md-list-item
+                href="/"
+                @click="scrollToElement()"
+                
+              > 
+                <h4>README.md</h4>
+              </md-list-item>
       </div>
       <div class="md-toolbar-section-end">
         <md-button
@@ -41,21 +47,21 @@
                         data-toggle="dropdown"
                       >
                         <i class="material-icons">apps</i>
-                        <p>Components</p>
+                        <p>MAIN</p>
                       </md-button>
                       <ul class="dropdown-menu dropdown-with-icons">
                         <li>
-                          <a href="#/">
+                          <a href="/">
                             <i class="material-icons">layers</i>
-                            <p>All Components</p>
+                            <p>Main page</p>
                           </a>
                         </li>
                         <li>
                           <a
-                            href="https://demos.creative-tim.com/vue-material-kit/documentation/"
+                            href="/landing"
                           >
                             <i class="material-icons">content_paste</i>
-                            <p>성향 검사</p>
+                            <p>장르별보기</p>
                           </a>
                         </li>
                       </ul>
@@ -65,16 +71,16 @@
               </li>
 
               <md-list-item
-                href="https://demos.creative-tim.com/vue-material-kit/documentation/"
-                target="_blank"
+                href="/landing"
+                @click="scrollToElement()"
                 v-if="showDownload"
               >
                 <i class="material-icons">content_paste</i>
-                <p>책성향 검사</p>
+                <p>영화 상세보기</p>
               </md-list-item>
 
               <md-list-item
-                href="http://localhost:3000/signup"
+                href="/signup"
                 @click="scrollToElement()"
                 v-if="showDownload"
               >
@@ -98,21 +104,21 @@
                       </md-button>
                       <ul class="dropdown-menu dropdown-with-icons">
                         <li>
-                          <a href="#/landing">
+                          <a href="/landing">
                             <i class="material-icons">view_day</i>
-                            <p>Landing Page</p>
+                            <p>성햠검사</p>
                           </a>
                         </li>
                         <li>
-                          <a href="#/login">
+                          <a href="/login">
                             <i class="material-icons">fingerprint</i>
-                            <p>Login Page</p>
+                            <p>로그인</p>
                           </a>
                         </li>
                         <li>
-                          <a href="#/profile">
+                          <a href="/signup">
                             <i class="material-icons">account_circle</i>
-                            <p>Profile Page</p>
+                            <p>회원가입</p>
                           </a>
                         </li>
                       </ul>
@@ -122,7 +128,7 @@
               </li>
 
               <md-list-item
-                href="https://twitter.com/CreativeTim"
+                href="https://twitter.com/"
                 target="_blank"
               >
                 <i class="fab fa-twitter"></i>
@@ -132,7 +138,7 @@
                 >
               </md-list-item>
               <md-list-item
-                href="https://www.facebook.com/CreativeTim"
+                href="https://www.facebook.com/"
                 target="_blank"
               >
                 <i class="fab fa-facebook-square"></i>
@@ -142,7 +148,7 @@
                 >
               </md-list-item>
               <md-list-item
-                href="https://www.instagram.com/CreativeTimOfficial"
+                href="https://www.instagram.com/"
                 target="_blank"
               >
                 <i class="fab fa-instagram"></i>

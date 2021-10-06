@@ -15,7 +15,11 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    components: { default: Home, header: MainNavbar, footer: MainFooter },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: "black" }
+    }
   },
   {
     path: "/about",
