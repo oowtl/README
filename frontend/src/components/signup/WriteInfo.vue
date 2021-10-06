@@ -1,19 +1,19 @@
 <template>
     <div>
     <login-card>
-        <md-field slot="inputs" :class="[getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag ? 'md-valid' : 'md-error']">
+        <md-field slot="inputs" :class="[getSignupCheck.userId.condition.flag && getSignupCheck.userId.duplicate.flag ? 'md-valid' : 'md-error']">
             <md-icon>face</md-icon>
             <label>ID</label>
-            <md-input v-model="id" type="text" @keyup="duplicateCheck('id')"></md-input>
-            <template v-if="getSignupCheck.id.condition.flag && getSignupCheck.id.duplicate.flag">
+            <md-input v-model="userId" type="text" @keyup="duplicateCheck('userId')"></md-input>
+            <template v-if="getSignupCheck.userId.condition.flag && getSignupCheck.userId.duplicate.flag">
                 <md-icon>done</md-icon>
             </template>
-            <template v-else-if="getSignupCheck.id.condition.flag === false">
-                <span class="md-helper-text">{{getSignupCheck.id.condition.msg}}</span>
+            <template v-else-if="getSignupCheck.userId.condition.flag === false">
+                <span class="md-helper-text">{{getSignupCheck.userId.condition.msg}}</span>
                 <md-icon>clear</md-icon>
             </template>
             <template v-else>
-                <span class="md-helper-text">{{getSignupCheck.id.duplicate.msg}}</span>
+                <span class="md-helper-text">{{getSignupCheck.userId.duplicate.msg}}</span>
                 <md-icon>clear</md-icon>
             </template>
         </md-field>
@@ -53,7 +53,6 @@
             <md-icon>lock</md-icon>
             <label>PasswordCheck</label>
             <md-input v-model="passwordCheck" type="password" @keyup="checkPassword()"></md-input>
-            <span class="md-helper-text"></span>
             <div v-if="getSignupCheck.password.condition.flag && checkPassword()">
                 <md-icon>done</md-icon>
             </div>
@@ -61,7 +60,7 @@
                 <md-icon>clear</md-icon>
             </div>
         </md-field>
-        <div>{{getSignupCheck}}</div>
+        
     </login-card>
     </div>
 </template>
@@ -77,7 +76,7 @@ export default {
     bodyClass: "login-page",
     data() {
         return {
-            id: "",
+            userId: "",
             nickname: "",
             password: "",
             passwordCheck : ""
@@ -104,8 +103,8 @@ export default {
     },
     methods : {
         conditionCheck : function(type){
-            if(type === 'id'){ // ID 조건
-                return this.id.length > 3 ? true : false
+            if(type === 'userId'){ // ID 조건
+                return this.userId.length > 3 ? true : false
             }else if(type === 'nickname'){ // 닉네임 조건
                 return this.nickname.length > 2 ? true : false
             }else{ // Password 조건
@@ -117,8 +116,8 @@ export default {
                 condition : this.conditionCheck(type),
                 val : type,
             };
-            if(type === 'id'){
-                data["content"] = this.id;
+            if(type === 'userId'){
+                data["content"] = this.userId;
             }else if(type === 'nickname') {
                 data["content"] = this.nickname
             }else{
