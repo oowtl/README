@@ -196,7 +196,7 @@ public class BookController {
 		}
 	}
 	
-	@GetMapping("/recommend/planb")
+	@GetMapping("/planb/recommend")
 	@ApiOperation(value = "추천 planB", notes = "추천시스템 플랜 B")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "성공"),
