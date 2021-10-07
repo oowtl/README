@@ -61,7 +61,7 @@
                             href="/landing"
                           >
                             <i class="material-icons">content_paste</i>
-                            <p>장르별보기</p>
+                            <p>BEST</p>
                           </a>
                         </li>
                       </ul>
@@ -76,7 +76,7 @@
                 v-if="showDownload"
               >
                 <i class="material-icons">content_paste</i>
-                <p>영화 상세보기</p>
+                <p>BEST BOOKS</p>
               </md-list-item>
 
               <md-list-item

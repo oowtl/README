@@ -90,28 +90,25 @@
             <div class="md-layout">
               <div class="md-layout-item md-medium-size-33 md-small-size-100">
                 <div class="info">
-                  
                   <h3 class="info-title">컴퓨터</h3>
                   <p>
-                    user Computer
+                    User Computer
                   </p>
                 </div>
               </div>
               <div class="md-layout-item md-medium-size-33 md-small-size-100">
-                <div class="info">
-                  
+                <div class="info">  
                   <h3 class="info-title">태블릿</h3>
                   <p>
-                    user Tablet
+                    User Tablet
                   </p>
                 </div>
               </div>
               <div class="md-layout-item md-medium-size-33 md-small-size-100">
                 <div class="info">
-                  
                   <h3 class="info-title">핸드폰</h3>
                   <p>
-                    user Handphone
+                    User Handphone
                   </p>
                 </div>
               </div>
