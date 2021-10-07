@@ -61,7 +61,7 @@
                             href="/landing"
                           >
                             <i class="material-icons">content_paste</i>
-                            <p>장르별보기</p>
+                            <p>BEST</p>
                           </a>
                         </li>
                       </ul>
@@ -76,7 +76,7 @@
                 v-if="showDownload"
               >
                 <i class="material-icons">content_paste</i>
-                <p>영화 상세보기</p>
+                <p>BEST BOOKS</p>
               </md-list-item>
 
               <md-list-item
@@ -87,6 +87,13 @@
                 <p>회원가입</p>
               </md-list-item>
 
+              <md-list-item
+                href="/login"
+                @click="scrollToElement()"
+                v-if="showDownload"
+              >
+                <p>로그인</p>
+              </md-list-item>
               <li class="md-list-item" v-else>
                 <a
                   href="javascript:void(0)"
@@ -126,37 +133,6 @@
                   </div>
                 </a>
               </li>
-
-              <md-list-item
-                href="https://twitter.com/"
-                target="_blank"
-              >
-                <i class="fab fa-twitter"></i>
-                <p class="hidden-lg">Twitter</p>
-                <md-tooltip md-direction="bottom"
-                  >Follow us on Twitter</md-tooltip
-                >
-              </md-list-item>
-              <md-list-item
-                href="https://www.facebook.com/"
-                target="_blank"
-              >
-                <i class="fab fa-facebook-square"></i>
-                <p class="hidden-lg">Facebook</p>
-                <md-tooltip md-direction="bottom"
-                  >Like us on Facebook</md-tooltip
-                >
-              </md-list-item>
-              <md-list-item
-                href="https://www.instagram.com/"
-                target="_blank"
-              >
-                <i class="fab fa-instagram"></i>
-                <p class="hidden-lg">Instagram</p>
-                <md-tooltip md-direction="bottom"
-                  >Follow us on Instagram</md-tooltip
-                >
-              </md-list-item>
             </md-list>
           </div>
         </div>

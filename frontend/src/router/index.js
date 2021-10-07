@@ -6,9 +6,11 @@ import Landing from "../views/Landing.vue";
 import Login from "../views/Login.vue";
 import Signup from "../views/Signup.vue";
 import Profile from "../views/Profile.vue";
+import QA from "../views/QA.vue";
 import Main from "../views/Main.vue";
 import MainNavbar from "../layout/MainNavbar.vue";
 import MainFooter from "../layout/MainFooter.vue";
+
 
 Vue.use(VueRouter);
 
@@ -82,7 +84,16 @@ const routes = [
       header: { colorOnScroll: 400 },
       footer: { backgroundColor: "black" }
     }
-  }
+  },
+  {
+    path: "/QA",
+    name: "QA",
+    components: { default: QA, header: MainNavbar, footer: MainFooter },
+    props: {
+      header: { colorOnScroll: 400 },
+      footer: { backgroundColor: "black" }
+    }
+  },
 ];
 
 const router = new VueRouter({
