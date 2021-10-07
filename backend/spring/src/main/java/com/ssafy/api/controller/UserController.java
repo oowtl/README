@@ -124,7 +124,7 @@ public class UserController {
 			}
 			
 			switch (valType) {
-			case "id":
+			case "userId":
 				ArrayList<User> userIdValRes = userService.getUserIdDuplicated(content);
 				if (userIdValRes.isEmpty()) {
 					return ResponseEntity.status(200).body(UserDuplicatedRes.of(true));
@@ -132,10 +132,10 @@ public class UserController {
 				else {
 					return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
 				}
-			case "nick":
+			case "nickname":
 				ArrayList<User> userNickValRes = userService.getUserNickDuplicated(content);
 				
-				if (userNickValRes.isEmpty()) {					
+				if (userNickValRes.isEmpty()) {	
 					return ResponseEntity.status(200).body(UserDuplicatedRes.of(true));
 				}
 				else {
@@ -147,7 +147,7 @@ public class UserController {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			return ResponseEntity.status(200).body(UserDuplicatedRes.of(false));
+			return ResponseEntity.status(500).body(UserDuplicatedRes.of(false));
 		} 
 	}
 	
