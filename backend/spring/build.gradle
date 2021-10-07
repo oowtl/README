@@ -65,9 +65,9 @@ configurations {
     args = ['install']
 }*/
 
-// task webpack(type: NpmTask, dependsOn: 'npmInstall') {
-//     args = ['run','build']
-// }
+/*task webpack(type: NpmTask, dependsOn: 'npmInstall') {
+    args = ['run','build']
+}*/
 
 // processResources is a Java task. Run the webpack bundling before this task using the 'build' task in the package.json
 // processResources.dependsOn 'webpack'
@@ -184,13 +184,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    
-    implementation("net.nurigo:javaSDK:2.2")
-    compile files("build/libs/javaSDK-2.2.jar")
-    compile files("build/libs/json-simple-1.1.1.jar")
-    
-    //메일인증을 위한 의존성 설정
-    implementation("org.springframework.boot:spring-boot-starter-mail")
 }
 
 test {
