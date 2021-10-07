@@ -9,16 +9,16 @@
         <ul>
           <li>
             <a href="">
-              Main
+              HOME
             </a>
           </li>
           <li>
-            <a href="/">
-              Home 
+            <a href="/login">
+              login 
             </a>
           </li>
           <li>
-            <a href="/Q&A">
+            <a href="/QA">
               Q&A
             </a>
           </li>
