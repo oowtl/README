@@ -1,7 +1,9 @@
 <template>
     <div class="wrapper">
-        
-        <carousel v-for="(book, index) in getMainPageInfo.book" v-bind:key="book" :index=index />
+        <template v-for="(book, index) in getMainPageInfo.book">
+            <h3 v-bind:key="book">{{book.type}}</h3>
+            <carousel :index=index v-bind:key="index"/>
+        </template>
         <book-detail v-if="getMainPageInfo.modal" />
     </div>
 </template>

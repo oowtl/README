@@ -43,6 +43,7 @@
 import { mapGetters } from 'vuex';
 export default {
     created(){
+        this.$store.dispatch('setBookPropensity');
         this.bookInfo = this.getBookPropensity[0]
     },
     data() {
@@ -65,7 +66,7 @@ export default {
                 signUpData["tendency"] = this.bookPropensity;
                 var mbti = this.getSignupForm.mbti;
                 signUpData["mbti"] = mbti.join('');
-                // this.$store.dispatch('signUp', this.signUpData);
+                this.$store.dispatch('signUp', this.signUpData);
                 this.$router.push("/login")
             }
         }
