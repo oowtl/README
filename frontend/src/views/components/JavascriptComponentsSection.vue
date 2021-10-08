@@ -14,7 +14,7 @@
               <md-button
                 class="md-success md-block"
                 @click="classicModal = true"
-                ><md-icon>library_books</md-icon> Classic</md-button
+                ><md-icon>library_books</md-icon> Class1c</md-button
               >
               <modal v-if="classicModal" @close="classicModalHide">
                 <template slot="header">

@@ -53,6 +53,9 @@ export default new Vuex.Store({
     MainPageInfo: {
       modal: false
       
+    },
+    ModalBookInfo: {
+      
     }
   },
   getters: {
@@ -67,7 +70,10 @@ export default new Vuex.Store({
     },
     getMainPageInfo(state) {
       return state.MainPageInfo;
-    }
+    },
+    getModalBookInfo(state) {
+      return state.ModalBookInfo;
+    },
   },
   mutations: {
     // 회원가입 검사
@@ -87,6 +93,9 @@ export default new Vuex.Store({
     },
     SETMAINMODAL(state, flag) {
       state.MainPageInfo.modal = flag;
+    },
+    SETBOOKPROPENSITY(state, contents) {
+      state.bookPropensity = contents;
     }
   },
   actions: {
@@ -124,7 +133,7 @@ export default new Vuex.Store({
     // 회원 가입
     signUp(signupForm) {
       http
-        .post('/auth/users/create', signupForm)
+        .post('/users/create', signupForm)
         .then(() => {
           alert("회원 가입 성공");
           return true;
@@ -137,6 +146,16 @@ export default new Vuex.Store({
     // 모달 창 유무
     mainModalFlag({ commit }, flag) {
       commit("SETMAINMODAL", flag);
+    },
+    setBookPropensity({ commit }) {
+      http
+        .get('/users/profile/tendency')
+        .then(({ data}) => {
+          commit("SETBOOKPROPENSITY", data.contents);
+        })
+        .catch(() => {
+          
+        })
     }
   }
 });

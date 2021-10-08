@@ -1,27 +1,41 @@
 <template>
-    <div>
-        <h1>메인</h1>
+    <div class="wrapper">
+        <carousel/>
         <book-detail v-if="getMainPageInfo.modal" />
-        <md-button v-if="!getMainPageInfo.modal" class="md-raised md-simple md-lg md-success" @click="openModal">OpenModal</md-button>
     </div>
 </template>
 
 <script>
 import BookDetail from '../components/book/BookDetail.vue'
 import { mapGetters } from 'vuex';
+import Carousel from '../components/book/Carousel.vue';
 export default {
-    components: { BookDetail },
+    components: { BookDetail, Carousel },
+    props: {
+        header: {
+        type: String,
+        default: require("@/assets/img/library.jpg")
+        }
+    },
+    data() {
+        return {
+        }
+    },
     computed : {
+        headerStyle() {
+            return {
+                backgroundImage: `url(${this.header})`
+            };
+        },
         ...mapGetters(['getMainPageInfo'])
     },
     methods : {
         openModal : function(){
             this.$store.dispatch('mainModalFlag', true);
-        }
+        },
     }
 }
-</script>
+</script >
 
 <style>
-
 </style>
