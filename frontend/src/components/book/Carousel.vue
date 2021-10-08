@@ -1,29 +1,26 @@
 <template>
 <div class="items">
     <carousel :dots=false :nav=false :margin=20 :autoWidth=true>
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
-                <img @click="openModal" src="http://image.kyobobook.co.kr/images/book/large/909/l9791165341909.jpg" >
+        <img @click="openModal" v-for="book in getMainPageInfo.book[index]" v-bind:key="book" src="book.contents.img">
     </carousel>
 </div>
 </template>
 
 <script>
 import carousel from 'vue-owl-carousel2'
-
+import { mapGetters } from 'vuex';
 export default {
     components: { carousel },
+    props : {
+        index : Number
+    },
     methods : {
         openModal : function(){
                 this.$store.dispatch('mainModalFlag', true);
             }
+    },
+    computed : {
+        ...mapGetters(['getMainPageInfo'])
     }
 }
 </script>
