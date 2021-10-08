@@ -66,7 +66,8 @@ export default {
                 signUpData["tendency"] = this.bookPropensity;
                 var mbti = this.getSignupForm.mbti;
                 signUpData["mbti"] = mbti.join('');
-                this.$store.dispatch('signUp', this.signUpData);
+                console.log(signUpData);
+                this.$store.dispatch('signUp', signUpData);
                 this.$router.push("/login")
             }
         }

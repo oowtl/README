@@ -83,18 +83,18 @@ public class BookController {
 	}
 	
 	
-	@GetMapping("/list/genre")
+	@GetMapping("/list/genre/{name}")
 	@ApiOperation(value = "장르별 도서 리스트 반환", notes = "도서목록 20개")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "성공"),
 		@ApiResponse(code = 500, message = "실패")
 	})
 	public ResponseEntity <BookListRes> getBooksGenre (
-			@RequestBody @ApiParam(value = "도서 리스트 정보 요청", required = true) BookListGetReq bookListInfo) {
+			@PathVariable("name") String genreName) {
 		
 		try {
 			// genre 찾기
-			Optional<Table_genre> genre = bookService.getGenre(bookListInfo.getType());
+			Optional<Table_genre> genre = bookService.getGenre(genreName);
 			genre.orElseThrow(() -> new Exception());
 			
 			// genre 관련한 것 찾아내기
