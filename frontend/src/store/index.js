@@ -159,7 +159,7 @@ export default new Vuex.Store({
           commit("SETBOOKPROPENSITY", data.contents);
         })
         .catch(() => {
-          
+          alert("실패");
         })
     },
     setBookInfo({ commit }) {
@@ -169,9 +169,12 @@ export default new Vuex.Store({
           'type' : req[i]
         }
         http
-          .get('/book/list/genre', type)
+          .get('/book/list/genre/' + req[i])
           .then(({ data }) => {
             commit("SETMAININFO", data);
+          })
+          .catch(() => {
+            alert("실패");
           })
       }
       
