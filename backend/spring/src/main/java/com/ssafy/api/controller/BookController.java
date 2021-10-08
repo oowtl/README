@@ -111,17 +111,17 @@ public class BookController {
 		}
 	}
 	
-	@GetMapping("/list/topic")
+	@GetMapping("/list/topic/{name}")
 	@ApiOperation(value = "주제어별 도서 리스트 반환")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "성공"),
 		@ApiResponse(code = 500, message = "서버 에러")
 	})
 	public ResponseEntity<BookListRes> getBooksTopic(
-			@RequestBody @ApiParam(value = "도서 리스트 종류", required = true) BookListGetReq bookListInfo) {
+			@PathVariable("name") String genreName) {
 		
 		try {
-			Optional<Table_keyword> keyword = bookService.getKeyword(bookListInfo.getType());
+			Optional<Table_keyword> keyword = bookService.getKeyword(genreName);
 			keyword.orElseThrow(() -> new Exception());
 			
 			// topic 에 관련된 book_keyword
