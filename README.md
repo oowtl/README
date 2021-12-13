@@ -1,44 +1,56 @@
-# SSAFY Bigdata project
+# README
 
-## How to Run
 
-### Sub1
 
-```sh
-cd sub1
-pip install -r requirements.txt
-python parse.py
-python analyze.py
-python visualize.py
-```
+## 프로젝트 소개
 
-### Sub 2
+협업 필터링 (item based, user based)을 이용한 도서추천 서비스
 
-**Backend**
 
-```sh
-cd sub2/backend
-pip install -r requirements.txt
-python manage.py makemigrations
-python manage.py migrate
-python manage.py initialize
-python manage.py runserver
-```
 
-**Frontend**
+## 프로젝트 명세
 
-```sh
-cd sub2/frontend
-npm install
-npm run serve
-```
+### 개발 환경
 
-### data file
-  - 기본 제공 데이터: 맛집 데이터
-    - 스켈레톤 폴더 내 포함
-    - PW: ssafy2021!@#$ - 확인 후 본 문서에서 PW 삭제 요망
-  - 추가 제공 데이터: 카드사 데이터
-    - 다운로드 링크: https://lab.ssafy.com/s05-bigdata-rec/card-data/-/blob/master/card-data.zip
-    - PW: ssafy2021!@#$ - 확인 후 본 문서에서 PW 삭제
-  - ** SSAFY에서 제공하는 기업 데이터는 다른 목적으로 사용할 수 없으며, 데이터 원본의 외부 반출을 금합니다.**
+#### Front-end / Android
+
+- __Framework__ : Vue.js 
+- __지원 환경__ : Web / Web App
+- __담당자__ : 김범수, 황규진, 권준엽
+
+
+
+#### Back-end
+
+- __Framework__ : Spring boot / Django
+- __Database__ : MySQL / JPA
+- __담당자__ : 정태현, 박준홍
+
+
+
+#### Design
+
+- __Framework 사용__ : O
+  - [Vuetify](https://vuetifyjs.com/)
+  - [Element Plus](https://element-plus.org/)
+- __Design Tool 사용__ : O
+
+
+
+### 핵심 라이브러리
+
+- __Pandas__
+
+  - __링크__ : https://pandas.pydata.org/
+  - __소개__ : 데이터 조작 및 분석을 위한 라이브러리
+  - __사용 기능__ : 숫자 테이블 조작
+  - __담당자__ : 정태현, 황규진 
+- __Selenium__
+
+  - __링크__ : https://www.selenium.dev/
+  - __소개__ : 데이터 수집을 위한 라이브러리
+  - __사용 기능__ : 데이터 크롤링
+  - __담당자__ : 박준홍
+
+
 
