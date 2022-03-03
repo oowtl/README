@@ -1,56 +1,88 @@
 # README
 
-
-
-## 프로젝트 소개
-
-협업 필터링 (item based, user based)을 이용한 도서추천 서비스
+- 해당 프로젝트는 기한 내에 완성하지 못한 프로젝트입니다.
 
 
 
-## 프로젝트 명세
-
-### 개발 환경
-
-#### Front-end / Android
-
-- __Framework__ : Vue.js 
-- __지원 환경__ : Web / Web App
-- __담당자__ : 김범수, 황규진, 권준엽
+협업 필터링을 이용한 도서추천 서비스 입니다.
 
 
 
-#### Back-end
+## 개발 환경
 
-- __Framework__ : Spring boot / Django
-- __Database__ : MySQL / JPA
-- __담당자__ : 정태현, 박준홍
+### Tech Stack
+
+| Category           | Name                      |
+| ------------------ | ------------------------- |
+| Language           | JAVA / PYTHON / html /css |
+| Front-end          | Vue.js / VUEX / Node      |
+| Back-end           | Spring Boot, Gradle       |
+| Database           | MYSQL / JPA               |
+| Develop tool       | VS Code / Eclipse         |
+| Collaboration tool | Git / JIRA                |
+| DevOps             | Nginx                     |
+| ETC                | selenium                  |
 
 
 
-#### Design
+### ETC
 
-- __Framework 사용__ : O
-  - [Vuetify](https://vuetifyjs.com/)
-  - [Element Plus](https://element-plus.org/)
-- __Design Tool 사용__ : O
+- **Library**
+  - __Pandas__
+    - __링크__ : https://pandas.pydata.org/
+    - __소개__ : 데이터 조작 및 분석을 위한 라이브러리
+    - __사용 기능__ : 숫자 테이블 조작
+
+  - __Selenium__
+    - __링크__ : https://www.selenium.dev/
+    - __소개__ : 데이터 수집을 위한 라이브러리
+    - __사용 기능__ : 데이터 크롤링
 
 
 
-### 핵심 라이브러리
 
-- __Pandas__
+## 프로젝트 설치 안내
 
-  - __링크__ : https://pandas.pydata.org/
-  - __소개__ : 데이터 조작 및 분석을 위한 라이브러리
-  - __사용 기능__ : 숫자 테이블 조작
-  - __담당자__ : 정태현, 황규진 
-- __Selenium__
+- 로컬에서의 프론트엔드 실행 시 명령어
+  ```bash
+  # front-end directory
+  cd ./frontend
+  
+  # requirements setting
+  yarn install
+  # run
+  yarn serve
+  ```
 
-  - __링크__ : https://www.selenium.dev/
-  - __소개__ : 데이터 수집을 위한 라이브러리
-  - __사용 기능__ : 데이터 크롤링
-  - __담당자__ : 박준홍
+- 프론트엔드 빌드 시 명령어
+  ```bash
+  # front-end directory
+  cd ./frontend
+  
+  cd src/main/resources 
+  # front-end build
+  yarn build
+  ```
+
+- 백엔드 빌드
+  ```bash
+  # back-end directory
+  cd ./backend/spring
+  
+  gradle clean build
+  ```
+
+
+
+## MockUp
+
+- [Figma link](https://www.figma.com/file/Lh8M6XqlHzoKq53MPyeSOa/%EC%B1%85%EC%B1%85?node-id=0%3A1)
+
+
+
+## API Document
+
+- [Google Spread Sheet](https://docs.google.com/spreadsheets/d/1mu0tD3CRBDDcm4BBZaElXKeRa6H5RtaCxVO_c0YDt0M/edit#gid=724055660)
 
 
 
