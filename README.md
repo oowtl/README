@@ -92,7 +92,7 @@
 
 ### 메인페이지
 
-![page_1](./exec/4. 시연 시나리오/page_1.png)
+![page_1](./documents/page_1.png)
 
 
 
@@ -100,8 +100,9 @@
 
 #### 회원가입 - 1
 
-![page_1](./exec/4. 시연 시나리오/page_2.png)
+![page_1](./documents/page_2.png)
 
 #### 회원가입 - 2
 
-![page_3](./exec/4. 시연 시나리오/page_3.png)
+![page_3](./documents/page_3.png)
+

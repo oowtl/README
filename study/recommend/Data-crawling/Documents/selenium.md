@@ -315,10 +315,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 
-
-
-
-
 ## 출처
 
 - https://ddolcat.tistory.com/674
